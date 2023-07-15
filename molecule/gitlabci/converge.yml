@@ -1,0 +1,29 @@
+---
+- name: "Converge"
+  hosts: "all"
+  tasks:
+    # replace these tasks with whatever you find suitable to test
+    - name: "Copy something to test use of synchronize module"
+      ansible.builtin.copy:
+        src: "/etc/hosts"
+        dest: "/tmp/hosts-from-controller"
+        mode: 0700
+
+    - name: "Include labocbz.install_elasticsearch"
+      tags:
+        - "labocbz.install_elasticsearch"
+      vars:
+        elasticsearch_major_version: "{{ inv_elasticsearch_major_version }}"
+        elasticsearch_port: "{{ inv_elasticsearch_port }}"
+        elasticsearch_cluster_name: "{{ inv_elasticsearch_cluster_name }}"
+        elasticsearch_elastic_password: "{{ inv_elasticsearch_elastic_password }}"
+        elasticsearch_ram: "{{ inv_elasticsearch_ram }}"
+        elasticsearch_data_path: "{{ inv_elasticsearch_data_path }}"
+        elasticsearch_p12_password: "{{ inv_elasticsearch_p12_password }}"
+        elasticsearch_ssl_path: "{{ inv_elasticsearch_ssl_path }}"
+        elasticsearch_config_path: "{{ inv_elasticsearch_config_path }}"
+        elasticsearch_group_name: "{{ inv_elasticsearch_group_name }}"
+        elasticsearch_client_auth: "{{ inv_elasticsearch_client_auth }}"
+        elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_authorities }}"
+      ansible.builtin.include_role:
+        name: "labocbz.install_elasticsearch"

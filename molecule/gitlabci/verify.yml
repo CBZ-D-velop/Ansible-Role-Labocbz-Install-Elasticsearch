@@ -1,0 +1,84 @@
+---
+# Don't forget to keep this file updated
+# molecule/<scenario>/verify.yml
+- name: "Verify"
+  hosts: "all"
+  gather_facts: false
+  tasks:
+
+    - name: "Get Elasticsearch service current state"
+      register: elasticsearch_service_status
+      failed_when: not elasticsearch_service_status.status.ActiveState == 'active'
+      ansible.builtin.systemd:
+        name: "elasticsearch"
+
+    - name: "Check Elasticsearch folders and conf"
+      when: inv_elasticsearch_p12_password is defined
+      loop:
+        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.p12"
+        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.key"
+        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.pem"
+        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.crt"
+      loop_control:
+        loop_var: folder_path
+      register: folder_path
+      failed_when: not folder_path.stat.exists
+      ansible.builtin.stat:
+        path: "{{ folder_path }}"
+
+    - name: "Verify all configured datas"
+      when: inv_elasticsearch_client_auth
+      block:
+        - name: "Check Elasticsearch user's elastic password on each nodes, with client auth"
+          when: inv_elasticsearch_client_auth
+          register: cluster_infos
+          failed_when: cluster_infos.status != 200
+          changed_when: cluster_infos.status != 200
+          ansible.builtin.uri:
+            url: "https://{{ inventory_hostname }}:{{ inv_elasticsearch_port }}/_cluster/health?wait_for_status=yellow&timeout=50s&pretty"
+            method: GET
+            user: "elastic"
+            password: "{{ inv_elasticsearch_elastic_password }}"
+            headers:
+              Content-Type: "application/json"
+            client_cert: "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.crt"
+            client_key: "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.key"
+
+        - name: "Verfify cluster name"
+          failed_when: cluster_infos.json.cluster_name != inv_elasticsearch_cluster_name
+          ansible.builtin.setup:
+
+        - name: "Verfify datas nodes"
+          failed_when: cluster_infos.json.number_of_data_nodes != groups[inv_elasticsearch_group_name] | length
+          ansible.builtin.setup:
+
+        - name: "Verfify cluster number nodes"
+          failed_when: cluster_infos.json.number_of_nodes != groups[inv_elasticsearch_group_name] | length
+          ansible.builtin.setup:
+
+    - name: "Verify all configured datas"
+      when: not inv_elasticsearch_client_auth
+      block:
+        - name: "Check Elasticsearch user's elastic password on each nodes, without client auth"
+          register: cluster_infos
+          failed_when: cluster_infos.status != 200
+          changed_when: cluster_infos.status != 200
+          ansible.builtin.uri:
+            url: "https://{{ inventory_hostname }}:{{ inv_elasticsearch_port }}/_cluster/health?wait_for_status=yellow&timeout=50s&pretty"
+            method: GET
+            user: "elastic"
+            password: "{{ inv_elasticsearch_elastic_password }}"
+            headers:
+              Content-Type: "application/json"
+
+        - name: "Verfify cluster name"
+          failed_when: cluster_infos.json.cluster_name != inv_elasticsearch_cluster_name
+          ansible.builtin.setup:
+
+        - name: "Verfify datas nodes"
+          failed_when: cluster_infos.json.number_of_data_nodes != groups[inv_elasticsearch_group_name] | length
+          ansible.builtin.setup:
+
+        - name: "Verfify cluster number nodes"
+          failed_when: cluster_infos.json.number_of_nodes != groups[inv_elasticsearch_group_name] | length
+          ansible.builtin.setup:

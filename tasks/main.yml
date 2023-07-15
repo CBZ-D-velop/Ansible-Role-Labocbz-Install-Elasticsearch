@@ -1,0 +1,131 @@
+---
+- name: "Install packages"
+  ansible.builtin.package:
+    update_cache: true
+    name:
+      - apt-transport-https
+
+- name: "Install Elasticsearch"
+  notify: 
+    - "Enable and start Elasticsearch"
+    - "Restart Elasticsearch"
+  block:
+    - name: "Add Elasticsearch GPG apt Key"
+      ansible.builtin.apt_key:
+        url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+
+    - name: "Add Elasticsearch Repository"
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://artifacts.elastic.co/packages/{{ elasticsearch_major_version }}.x/apt stable main"
+
+    - name: "Update apt and install Elasticsearch"
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - elasticsearch
+
+    - name: "Fix JVM options for Elasticsearch"
+      ansible.builtin.template:
+        src: "templates/jvm.options.j2"
+        dest: "{{ elasticsearch_config_path }}/jvm.options"
+        mode: 0660
+        group: "root"
+        owner: "{{ elasticsearch_group }}"
+        lstrip_blocks: yes
+
+    - name: "Check if Elasticsearch temps dir exist"
+      register: file_check
+      ansible.builtin.stat:
+        path: "{{ elasticsearch_temp_path }}"
+
+    - name: "Create Elasticsearch temps dir"
+      when: not file_check.stat.exists
+      ansible.builtin.file:
+        path: "{{ elasticsearch_temp_path }}"
+        state: directory
+        recurse: yes
+        owner: "root"
+        group: "{{ elasticsearch_group }}"
+        mode: 0770
+
+    - name: "Apply permissions on Elasticsearch conf dir"
+      ansible.builtin.file:
+        path: "{{ elasticsearch_config_path }}"
+        state: directory
+        recurse: yes
+        owner: "root"
+        group: "{{ elasticsearch_group }}"
+        mode: 0770
+
+- name: "Configure Elasticsearch"
+  notify: 
+    - "Stop Elasticsearch"
+    - "Remove all Elasticsearch datas"
+    - "Create Elasticsearch data path"
+    - "Enable and start Elasticsearch"
+  block:
+    - name: "Gather facts from all hosts"
+      delegate_to: "{{ item }}"
+      delegate_facts: true
+      loop: "{{ groups[elasticsearch_group_name] }}"
+      ansible.builtin.setup:
+
+    - name: "Import Elasticsearch configuration file"
+      ansible.builtin.template:
+        src: "templates/elasticsearch.yml.j2"
+        dest: "{{ elasticsearch_config_path }}/elasticsearch.yml"
+        mode: 0755
+        group: "{{ elasticsearch_group }}"
+        owner: "root"
+        lstrip_blocks: yes
+
+- name: "Flush handlers"
+  ansible.builtin.meta: flush_handlers
+
+- name: "Change the Elastic user password"
+  run_once: true
+  when: elasticsearch_p12_password is defined
+  block:
+    - name: "Reset the password"
+      ansible.builtin.command: "/usr/share/elasticsearch/bin/elasticsearch-reset-password -b -u elastic --force"
+      register: elastic_password
+      changed_when: elastic_password.stdout == ""
+      failed_when: elastic_password.rc != 0
+
+    - name: "Set the new password (with HTTPS, no client auth)"
+      when: not elasticsearch_client_auth
+      vars:
+        elastic_new_password: "{{ elastic_password.stdout_lines[-1] | regex_replace('^New value: (.*)$', '\\1') }}"
+      register: output
+      failed_when: output.json != {}
+      changed_when: output.json != {}
+      ansible.builtin.uri:
+        url: "https://{{ inventory_hostname }}:{{ elasticsearch_port }}/_security/user/elastic/_password?pretty"
+        method: POST
+        user: "elastic"
+        password: "{{ elastic_new_password }}"
+        body_format: json
+        body:
+          password: "{{ elasticsearch_elastic_password }}"
+        headers:
+          Content-Type: "application/json"
+
+    - name: "Set the new password (with HTTPS, with client auth)"
+      when: elasticsearch_client_auth
+      vars:
+        elastic_new_password: "{{ elastic_password.stdout_lines[-1] | regex_replace('^New value: (.*)$', '\\1') }}"
+      register: output
+      failed_when: output.json != {}
+      changed_when: output.json != {}
+      ansible.builtin.uri:
+        url: "https://{{ inventory_hostname }}:{{ elasticsearch_port }}/_security/user/elastic/_password?pretty"
+        method: POST
+        user: "elastic"
+        password: "{{ elastic_new_password }}"
+        body_format: json
+        body:
+          password: "{{ elasticsearch_elastic_password }}"
+        headers:
+          Content-Type: "application/json"
+        client_cert: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.crt"
+        client_key: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.key"

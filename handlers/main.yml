@@ -1,0 +1,43 @@
+---
+- name: "Stop Elasticsearch"
+  register: elasticsearch_service_status
+  when: (groups[elasticsearch_group_name] | length > 1)
+  changed_when: not elasticsearch_service_status.status.ActiveState != "stopped"
+  ansible.builtin.service:
+    name: "elasticsearch"
+    state: "stopped"
+
+- name: "Remove all Elasticsearch datas"
+  when: (groups[elasticsearch_group_name] | length > 1)
+  ansible.builtin.file:
+    path: "{{ elasticsearch_data_path }}"
+    state: absent
+
+- name: "Create Elasticsearch data path"
+  when: (groups[elasticsearch_group_name] | length > 1)
+  ansible.builtin.file:
+    path: "{{ elasticsearch_data_path }}"
+    state: directory
+    mode: 0770
+    group: "{{ elasticsearch_group }}"
+    owner: "root"
+
+- name: "Enable and start Elasticsearch"
+  register: elasticsearch_service_status
+  changed_when: not elasticsearch_service_status.state != "started"
+  throttle: 1
+  ansible.builtin.service:
+    name: "elasticsearch"
+    state: "started"
+    daemon_reload: true
+    enabled: yes
+
+- name: "Restart Elasticsearch"
+  register: elasticsearch_service_status
+  changed_when: not elasticsearch_service_status.state != "restarted"
+  throttle: 1
+  ansible.builtin.service:
+    name: "elasticsearch"
+    state: "restarted"
+    daemon_reload: true
+    enabled: yes
