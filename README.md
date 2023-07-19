@@ -209,8 +209,8 @@ Here you can put your change to keep a trace of your work and decisions.
 * You can get the cluster and verify by check the cluster health (see [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html))
 * All nodes are master-eligible, because you can't bootstrap a cluster with data already present (see [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html)), so the role purge all data if any changes are done into the elasticsearch.yml file ! WARNING
 * Cluster use custom pem/key files, not a jks or a p12, but p12 and p12 password are required to run the role even if they are NOT used (see [here](https://opster.com/guides/elasticsearch/security/elasticsearch-cluster-security/))
-* It seem we can use users in no protected mode (security=false) and you can't use such a conf if no SSL/TLS files ares available (see[here](https://discuss.elastic.co/t/unable-to-authenticate-user-for-rest-request/197461)) but the role will create the cluster
-* You can't keep old data from Elasticsearch when you upgrade to a cluster, you have to export your data BEFORE anything (see[here](https://www.elastic.co/guide/en/elasticsearch/reference/current/add-elasticsearch-nodes.html))
+* It seem we can use users in no protected mode (security=false) and you can't use such a conf if no SSL/TLS files ares available (see [here](https://discuss.elastic.co/t/unable-to-authenticate-user-for-rest-request/197461)) but the role will create the cluster
+* You can't keep old data from Elasticsearch when you upgrade to a cluster, you have to export your data BEFORE anything (see [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/add-elasticsearch-nodes.html))
 
 ### 2023-05-30: Cryptographic update
 
