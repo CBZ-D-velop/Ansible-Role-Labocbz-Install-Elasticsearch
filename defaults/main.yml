@@ -6,17 +6,17 @@ elasticsearch_host: "0.0.0.0"
 elasticsearch_port: 9200
 elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 elasticsearch_data_path: "/var/lib/elasticsearch"
-elasticsearch_group_name: "ELASTICSEARCH"
+elasticsearch_hosts: "{{ inventory_hostname }}"
 elasticsearch_temp_path: "{{ elasticsearch_config_path }}/tmp"
 
-elasticsearch_p12_password: "myPassword"
-elasticsearch_client_auth: false
-elasticsearch_ssl_authorities: "/etc/ssl/cacert"
-
 elasticsearch_ssl_path: "{{ elasticsearch_config_path }}/ssl"
-
+elasticsearch_client_auth: false
 elasticsearch_elastic_password: "myVeryStringP@ssword"
+elasticsearch_ssl: true
+elasticsearch_ssl_authorities: "/etc/ssl/cacert"
+elasticsearch_ssl_key: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.key"
+elasticsearch_ssl_crt: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.crt"
 
-elasticsearch_ram: "4g"
+elasticsearch_heap: "4g"
 
 elasticsearch_group: "elasticsearch"

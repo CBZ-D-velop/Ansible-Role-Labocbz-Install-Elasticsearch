@@ -75,16 +75,16 @@ http.port: {{ elasticsearch_port }}
 #
 #discovery.seed_hosts: ["host1", "host2"]
 discovery.seed_hosts:
-{% for host in groups[elasticsearch_group_name] %}
-  - {{ hostvars[host]['ansible_default_ipv4']['address'] }}:9300
+{% for host in elasticsearch_hosts %}
+  - {{ host }}:9300
 {% endfor %}
 #
 # Bootstrap the cluster using an initial set of master-eligible nodes:
 #
 #cluster.initial_master_nodes: ["node-1", "node-2"]
 cluster.initial_master_nodes:
-{% for host in groups[elasticsearch_group_name] %}
-  - {{ host }}
+{% for host in elasticsearch_hosts %}
+  - {{ host }}:9300
 {% endfor %}
 #
 # For more information, consult the discovery and cluster formation module documentation.
@@ -110,7 +110,7 @@ cluster.initial_master_nodes:
 
 # Enable security features
 
-{% if elasticsearch_p12_password is defined %}
+{% if elasticsearch_ssl | default(false) %}
 xpack.security.enabled: true
 xpack.security.enrollment.enabled: true
 
@@ -125,8 +125,8 @@ xpack.security.transport.ssl.client_authentication: required
 # Enable encryption for HTTP API client connections, such as Kibana, Logstash, and Agents
 xpack.security.http.ssl.enabled: true
 xpack.security.http.ssl.verification_mode: certificate
-xpack.security.http.ssl.key: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.key"
-xpack.security.http.ssl.certificate: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.crt"
+xpack.security.http.ssl.key: "{{ elasticsearch_ssl_key }}"
+xpack.security.http.ssl.certificate: "{{ elasticsearch_ssl_crt }}"
 xpack.security.transport.ssl.certificate_authorities: [ "{{ elasticsearch_ssl_authorities }}" ]
 
 {% else %}

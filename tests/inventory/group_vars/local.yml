@@ -5,13 +5,16 @@ inv_elasticsearch_port: 9200
 inv_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 inv_elasticsearch_data_path: "/var/lib/elasticsearch"
 inv_elasticsearch_config_path: "/etc/elasticsearch"
-inv_elasticsearch_group_name: "local"
+inv_elasticsearch_hosts:
+  - "molecule-local-instance-1-install-elasticsearh"
+  - "molecule-local-instance-2-install-elasticsearh"
+  - "molecule-local-instance-3-install-elasticsearh"
 
-inv_elasticsearch_p12_password: "secret"
 inv_elasticsearch_client_auth: true
 inv_elasticsearch_ssl_path: "{{ inv_elasticsearch_config_path }}/ssl"
 inv_elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_path }}/My-Local-CA-Authority/My-Local-CA-Authority.crt"
 
 inv_elasticsearch_elastic_password: "myVeryStringP@ssword"
+inv_elasticsearch_ssl: true
 
-inv_elasticsearch_ram: "1g"
+inv_elasticsearch_heap: "1g"

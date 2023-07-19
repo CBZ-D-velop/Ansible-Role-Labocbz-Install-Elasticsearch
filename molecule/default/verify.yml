@@ -13,11 +13,9 @@
         name: "elasticsearch"
 
     - name: "Check Elasticsearch folders and conf"
-      when: inv_elasticsearch_p12_password is defined
+      when: inv_elasticsearch_ssl | default(false)
       loop:
-        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.p12"
         - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.key"
-        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.pem"
         - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.crt"
       loop_control:
         loop_var: folder_path
@@ -27,10 +25,9 @@
         path: "{{ folder_path }}"
 
     - name: "Verify all configured datas"
-      when: inv_elasticsearch_client_auth
+      when: inv_elasticsearch_client_auth | default(false)
       block:
         - name: "Check Elasticsearch user's elastic password on each nodes, with client auth"
-          when: inv_elasticsearch_client_auth
           register: cluster_infos
           failed_when: cluster_infos.status != 200
           changed_when: cluster_infos.status != 200
@@ -49,15 +46,15 @@
           ansible.builtin.setup:
 
         - name: "Verfify datas nodes"
-          failed_when: cluster_infos.json.number_of_data_nodes != groups[inv_elasticsearch_group_name] | length
+          failed_when: cluster_infos.json.number_of_data_nodes != inv_elasticsearch_hosts | length
           ansible.builtin.setup:
 
         - name: "Verfify cluster number nodes"
-          failed_when: cluster_infos.json.number_of_nodes != groups[inv_elasticsearch_group_name] | length
+          failed_when: cluster_infos.json.number_of_nodes != inv_elasticsearch_hosts | length
           ansible.builtin.setup:
 
     - name: "Verify all configured datas"
-      when: not inv_elasticsearch_client_auth
+      when: not (inv_elasticsearch_client_auth | default(false))
       block:
         - name: "Check Elasticsearch user's elastic password on each nodes, without client auth"
           register: cluster_infos
@@ -76,9 +73,9 @@
           ansible.builtin.setup:
 
         - name: "Verfify datas nodes"
-          failed_when: cluster_infos.json.number_of_data_nodes != groups[inv_elasticsearch_group_name] | length
+          failed_when: cluster_infos.json.number_of_data_nodes != inv_elasticsearch_hosts | length
           ansible.builtin.setup:
 
         - name: "Verfify cluster number nodes"
-          failed_when: cluster_infos.json.number_of_nodes != groups[inv_elasticsearch_group_name] | length
+          failed_when: cluster_infos.json.number_of_nodes != inv_elasticsearch_hosts | length
           ansible.builtin.setup:

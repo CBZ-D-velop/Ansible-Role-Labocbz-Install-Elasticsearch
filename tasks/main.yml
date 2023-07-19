@@ -28,7 +28,7 @@
       ansible.builtin.template:
         src: "templates/jvm.options.j2"
         dest: "{{ elasticsearch_config_path }}/jvm.options"
-        mode: 0660
+        mode: "0660"
         group: "root"
         owner: "{{ elasticsearch_group }}"
         lstrip_blocks: yes
@@ -46,7 +46,7 @@
         recurse: yes
         owner: "root"
         group: "{{ elasticsearch_group }}"
-        mode: 0770
+        mode: "0770"
 
     - name: "Apply permissions on Elasticsearch conf dir"
       ansible.builtin.file:
@@ -55,7 +55,7 @@
         recurse: yes
         owner: "root"
         group: "{{ elasticsearch_group }}"
-        mode: 0770
+        mode: "0770"
 
 - name: "Configure Elasticsearch"
   notify: 
@@ -67,17 +67,22 @@
     - name: "Gather facts from all hosts"
       delegate_to: "{{ item }}"
       delegate_facts: true
-      loop: "{{ groups[elasticsearch_group_name] }}"
+      loop: "{{ elasticsearch_hosts }}"
       ansible.builtin.setup:
 
     - name: "Import Elasticsearch configuration file"
       ansible.builtin.template:
         src: "templates/elasticsearch.yml.j2"
         dest: "{{ elasticsearch_config_path }}/elasticsearch.yml"
-        mode: 0755
+        mode: "0755"
         group: "{{ elasticsearch_group }}"
         owner: "root"
         lstrip_blocks: yes
+
+- name: "Create P12 and SSL/TLS files"
+  when: inv_elasticsearch_ssl
+  block:
+    
 
 - name: "Flush handlers"
   ansible.builtin.meta: flush_handlers

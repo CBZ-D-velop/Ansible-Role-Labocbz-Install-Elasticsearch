@@ -35,8 +35,8 @@
 ## heap to 4 GB, create a new file in the jvm.options.d
 ## directory containing these lines:
 ##
--Xms{{ elasticsearch_ram }}
--Xmx{{ elasticsearch_ram }}
+-Xms{{ elasticsearch_heap }}
+-Xmx{{ elasticsearch_heap }}
 ##
 ## See https://www.elastic.co/guide/en/elasticsearch/reference/8.7/heap-size.html
 ## for more information

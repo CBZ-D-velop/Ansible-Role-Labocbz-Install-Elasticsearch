@@ -19,6 +19,20 @@
 
 An Ansible role install and configure Elasticsearch your server.
 
+This role is designed to install Elasticsearch, both in standalone mode and in a clustered configuration. It offers a comprehensive set of options to tailor Elasticsearch settings based on specific requirements.
+
+Administrators can specify the major version of Elasticsearch to be installed. The role allows setting up Elasticsearch on the desired host and port, along with configuring the cluster name and data path.
+
+SSL/TLS encryption is supported, allowing administrators to secure Elasticsearch communication. The role generates SSL certificates and keys, and administrators can enable client-side authentication if needed.
+
+The role also provides the ability to configure Elasticsearch's JVM memory usage, ensuring efficient utilization of system resources.
+
+For cluster setups, administrators can specify additional hosts to join an existing Elasticsearch cluster. However, it's important to note that data from a standalone setup cannot be directly migrated to a cluster using this role. A fresh installation of Elasticsearch is required when transitioning from standalone to clustered mode.
+
+Furthermore, the role includes a security enhancement feature, allowing administrators to change the password for the Elasticsearch user "elastic" to strengthen the security of the Elasticsearch instance.
+
+Overall, this role simplifies the installation and configuration of Elasticsearch, offering flexibility and customization options to cater to different deployment scenarios, whether standalone or clustered, with or without SSL/TLS encryption.
+
 ## Folder structure
 
 By default Ansible will look in each directory within a role for a main.yml file for relevant content (also man.yml and main):
@@ -109,7 +123,6 @@ elasticsearch_host: "0.0.0.0"
 elasticsearch_port: 9200
 elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 elasticsearch_data_path: "/var/lib/elasticsearch"
-elasticsearch_group_name: "ELASTICSEARCH"
 elasticsearch_temp_path: "{{ elasticsearch_config_path }}/tmp"
 
 elasticsearch_p12_password: "myPassword"
@@ -120,7 +133,7 @@ elasticsearch_ssl_path: "{{ elasticsearch_config_path }}/ssl"
 
 elasticsearch_elastic_password: "myVeryStringP@ssword"
 
-elasticsearch_ram: "4g"
+elasticsearch_heap: "4g"
 
 elasticsearch_group: "elasticsearch"
 
@@ -141,7 +154,6 @@ inv_elasticsearch_port: 9200
 inv_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 inv_elasticsearch_data_path: "/var/lib/elasticsearch"
 inv_elasticsearch_config_path: "/etc/elasticsearch"
-inv_elasticsearch_group_name: "local"
 
 inv_elasticsearch_p12_password: "secret"
 inv_elasticsearch_client_auth: true
@@ -150,7 +162,7 @@ inv_elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_path }}/My-Local-CA
 
 inv_elasticsearch_elastic_password: "myVeryStringP@ssword"
 
-inv_elasticsearch_ram: "1g"
+inv_elasticsearch_heap: "1g"
 
 ```
 
@@ -173,12 +185,11 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     elasticsearch_port: "{{ inv_elasticsearch_port }}"
     elasticsearch_cluster_name: "{{ inv_elasticsearch_cluster_name }}"
     elasticsearch_elastic_password: "{{ inv_elasticsearch_elastic_password }}"
-    elasticsearch_ram: "{{ inv_elasticsearch_ram }}"
+    elasticsearch_heap: "{{ inv_elasticsearch_heap }}"
     elasticsearch_data_path: "{{ inv_elasticsearch_data_path }}"
     elasticsearch_p12_password: "{{ inv_elasticsearch_p12_password }}"
     elasticsearch_ssl_path: "{{ inv_elasticsearch_ssl_path }}"
     elasticsearch_config_path: "{{ inv_elasticsearch_config_path }}"
-    elasticsearch_group_name: "{{ inv_elasticsearch_group_name }}"
     elasticsearch_client_auth: "{{ inv_elasticsearch_client_auth }}"
     elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_authorities }}"
     ansible.builtin.include_role:

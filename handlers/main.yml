@@ -1,20 +1,20 @@
 ---
 - name: "Stop Elasticsearch"
   register: elasticsearch_service_status
-  when: (groups[elasticsearch_group_name] | length > 1)
+  when: (elasticsearch_hosts | length > 1)
   changed_when: not elasticsearch_service_status.status.ActiveState != "stopped"
   ansible.builtin.service:
     name: "elasticsearch"
     state: "stopped"
 
 - name: "Remove all Elasticsearch datas"
-  when: (groups[elasticsearch_group_name] | length > 1)
+  when: (elasticsearch_hosts | length > 1)
   ansible.builtin.file:
     path: "{{ elasticsearch_data_path }}"
     state: absent
 
 - name: "Create Elasticsearch data path"
-  when: (groups[elasticsearch_group_name] | length > 1)
+  when: (elasticsearch_hosts | length > 1)
   ansible.builtin.file:
     path: "{{ elasticsearch_data_path }}"
     state: directory
