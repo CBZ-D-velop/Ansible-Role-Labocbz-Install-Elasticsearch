@@ -79,11 +79,6 @@
         owner: "root"
         lstrip_blocks: yes
 
-- name: "Create P12 and SSL/TLS files"
-  when: inv_elasticsearch_ssl
-  block:
-    
-
 - name: "Flush handlers"
   ansible.builtin.meta: flush_handlers
 
