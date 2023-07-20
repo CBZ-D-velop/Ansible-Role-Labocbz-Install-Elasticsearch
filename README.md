@@ -19,6 +19,20 @@
 
 An Ansible role install and configure Elasticsearch your server.
 
+This role is designed to install Elasticsearch, both in standalone mode and in a clustered configuration. It offers a comprehensive set of options to tailor Elasticsearch settings based on specific requirements.
+
+Administrators can specify the major version of Elasticsearch to be installed. The role allows setting up Elasticsearch on the desired host and port, along with configuring the cluster name and data path.
+
+SSL/TLS encryption is supported, allowing administrators to secure Elasticsearch communication. The role generates SSL certificates and keys, and administrators can enable client-side authentication if needed.
+
+The role also provides the ability to configure Elasticsearch's JVM memory usage, ensuring efficient utilization of system resources.
+
+For cluster setups, administrators can specify additional hosts to join an existing Elasticsearch cluster. However, it's important to note that data from a standalone setup cannot be directly migrated to a cluster using this role. A fresh installation of Elasticsearch is required when transitioning from standalone to clustered mode.
+
+Furthermore, the role includes a security enhancement feature, allowing administrators to change the password for the Elasticsearch user "elastic" to strengthen the security of the Elasticsearch instance.
+
+Overall, this role simplifies the installation and configuration of Elasticsearch, offering flexibility and customization options to cater to different deployment scenarios, whether standalone or clustered, with or without SSL/TLS encryption.
+
 ## Folder structure
 
 By default Ansible will look in each directory within a role for a main.yml file for relevant content (also man.yml and main):
@@ -102,27 +116,25 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-elasticsearch_major_version: "8"
+install_elasticsearch_major_version: "8"
 
-elasticsearch_config_path: "/etc/elasticsearch"
-elasticsearch_host: "0.0.0.0"
-elasticsearch_port: 9200
-elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
-elasticsearch_data_path: "/var/lib/elasticsearch"
-elasticsearch_group_name: "ELASTICSEARCH"
-elasticsearch_temp_path: "{{ elasticsearch_config_path }}/tmp"
+install_elasticsearch_config_path: "/etc/elasticsearch"
+install_elasticsearch_host: "0.0.0.0"
+install_elasticsearch_port: 9200
+install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
+install_elasticsearch_data_path: "/var/lib/elasticsearch"
+install_elasticsearch_temp_path: "{{ install_elasticsearch_config_path }}/tmp"
 
-elasticsearch_p12_password: "myPassword"
-elasticsearch_client_auth: false
-elasticsearch_ssl_authorities: "/etc/ssl/cacert"
+install_elasticsearch_client_auth: false
+install_elasticsearch_ssl_authorities: "/etc/ssl/cacert"
 
-elasticsearch_ssl_path: "{{ elasticsearch_config_path }}/ssl"
+install_elasticsearch_ssl_path: "{{ install_elasticsearch_config_path }}/ssl"
 
-elasticsearch_elastic_password: "myVeryStringP@ssword"
+install_elasticsearch_elastic_password: "myVeryStringP@ssword"
 
-elasticsearch_ram: "4g"
+install_elasticsearch_heap: "4g"
 
-elasticsearch_group: "elasticsearch"
+install_elasticsearch_group: "elasticsearch"
 
 ```
 
@@ -135,22 +147,20 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ```YAML
 # From inventory
 ---
-inv_elasticsearch_major_version: "8"
+inv_install_elasticsearch_major_version: "8"
 
-inv_elasticsearch_port: 9200
-inv_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
-inv_elasticsearch_data_path: "/var/lib/elasticsearch"
-inv_elasticsearch_config_path: "/etc/elasticsearch"
-inv_elasticsearch_group_name: "local"
+inv_install_elasticsearch_port: 9200
+inv_install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
+inv_install_elasticsearch_data_path: "/var/lib/elasticsearch"
+inv_install_elasticsearch_config_path: "/etc/elasticsearch"
 
-inv_elasticsearch_p12_password: "secret"
-inv_elasticsearch_client_auth: true
-inv_elasticsearch_ssl_path: "{{ inv_elasticsearch_config_path }}/ssl"
-inv_elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_path }}/My-Local-CA-Authority/My-Local-CA-Authority.crt"
+inv_install_elasticsearch_client_auth: true
+inv_install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_config_path }}/ssl"
+inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/My-Local-CA-Authority/My-Local-CA-Authority.crt"
 
-inv_elasticsearch_elastic_password: "myVeryStringP@ssword"
+inv_install_elasticsearch_elastic_password: "myVeryStringP@ssword"
 
-inv_elasticsearch_ram: "1g"
+inv_install_elasticsearch_heap: "1g"
 
 ```
 
@@ -169,18 +179,16 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     tags:
     - "labocbz.install_elasticsearch"
     vars:
-    elasticsearch_major_version: "{{ inv_elasticsearch_major_version }}"
-    elasticsearch_port: "{{ inv_elasticsearch_port }}"
-    elasticsearch_cluster_name: "{{ inv_elasticsearch_cluster_name }}"
-    elasticsearch_elastic_password: "{{ inv_elasticsearch_elastic_password }}"
-    elasticsearch_ram: "{{ inv_elasticsearch_ram }}"
-    elasticsearch_data_path: "{{ inv_elasticsearch_data_path }}"
-    elasticsearch_p12_password: "{{ inv_elasticsearch_p12_password }}"
-    elasticsearch_ssl_path: "{{ inv_elasticsearch_ssl_path }}"
-    elasticsearch_config_path: "{{ inv_elasticsearch_config_path }}"
-    elasticsearch_group_name: "{{ inv_elasticsearch_group_name }}"
-    elasticsearch_client_auth: "{{ inv_elasticsearch_client_auth }}"
-    elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_authorities }}"
+    install_elasticsearch_major_version: "{{ inv_install_elasticsearch_major_version }}"
+    install_elasticsearch_port: "{{ inv_install_elasticsearch_port }}"
+    install_elasticsearch_cluster_name: "{{ inv_install_elasticsearch_cluster_name }}"
+    install_elasticsearch_elastic_password: "{{ inv_install_elasticsearch_elastic_password }}"
+    install_elasticsearch_heap: "{{ inv_install_elasticsearch_heap }}"
+    install_elasticsearch_data_path: "{{ inv_install_elasticsearch_data_path }}"
+    install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_ssl_path }}"
+    install_elasticsearch_config_path: "{{ inv_install_elasticsearch_config_path }}"
+    install_elasticsearch_client_auth: "{{ inv_install_elasticsearch_client_auth }}"
+    install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_authorities }}"
     ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```
@@ -198,8 +206,8 @@ Here you can put your change to keep a trace of your work and decisions.
 * You can get the cluster and verify by check the cluster health (see [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html))
 * All nodes are master-eligible, because you can't bootstrap a cluster with data already present (see [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-bootstrap-cluster.html)), so the role purge all data if any changes are done into the elasticsearch.yml file ! WARNING
 * Cluster use custom pem/key files, not a jks or a p12, but p12 and p12 password are required to run the role even if they are NOT used (see [here](https://opster.com/guides/elasticsearch/security/elasticsearch-cluster-security/))
-* It seem we can use users in no protected mode (security=false) and you can't use such a conf if no SSL/TLS files ares available (see[here](https://discuss.elastic.co/t/unable-to-authenticate-user-for-rest-request/197461)) but the role will create the cluster
-* You can't keep old data from Elasticsearch when you upgrade to a cluster, you have to export your data BEFORE anything (see[here](https://www.elastic.co/guide/en/elasticsearch/reference/current/add-elasticsearch-nodes.html))
+* It seem we can use users in no protected mode (security=false) and you can't use such a conf if no SSL/TLS files ares available (see [here](https://discuss.elastic.co/t/unable-to-authenticate-user-for-rest-request/197461)) but the role will create the cluster
+* You can't keep old data from Elasticsearch when you upgrade to a cluster, you have to export your data BEFORE anything (see [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/add-elasticsearch-nodes.html))
 
 ### 2023-05-30: Cryptographic update
 

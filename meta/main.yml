@@ -1,7 +1,7 @@
 galaxy_info:
   author: "Lord Robin Crombez"
   namespace: "labocbz"
-  role_name: "install_elasticsearh"
+  role_name: "install_elasticsearch"
   description: "An Ansible role install and configure Elasticsearch your server."
   company: "Labo-CBZ"
 
