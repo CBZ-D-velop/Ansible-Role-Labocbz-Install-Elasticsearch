@@ -10,6 +10,7 @@
     - "Stop Elasticsearch"
     - "Remove all Elasticsearch datas"
     - "Create Elasticsearch data path"
+    - "Enable and start Elasticsearch"
     - "Restart Elasticsearch"
   block:
     - name: "Add Elasticsearch GPG apt Key"
@@ -21,8 +22,6 @@
         repo: "deb [arch=amd64] https://artifacts.elastic.co/packages/{{ elasticsearch_major_version }}.x/apt stable main"
 
     - name: "Update apt and install Elasticsearch"
-      notify:
-        - "Enable and start Elasticsearch"
       ansible.builtin.apt:
         update_cache: true
         name:
@@ -60,6 +59,17 @@
         group: "{{ elasticsearch_group }}"
         owner: "root"
         lstrip_blocks: yes
+
+    - name: "Apply permissions on Elasticsearch conf dir"
+      register: output
+      changed_when: output.size <= 0
+      ansible.builtin.file:
+        path: "{{ elasticsearch_config_path }}"
+        state: directory
+        recurse: yes
+        owner: "root"
+        group: "{{ elasticsearch_group }}"
+        mode: "0770"
 
 - name: "Flush handlers"
   ansible.builtin.meta: flush_handlers
