@@ -1,8 +1,8 @@
 ---
 - name: "Stop Elasticsearch"
-  register: elasticsearch_service_status
+  register: install_elasticsearch_service_status
   when: (ansible_play_hosts | length > 1)
-  changed_when: not elasticsearch_service_status.status.ActiveState != "stopped"
+  changed_when: not install_elasticsearch_service_status.status.ActiveState != "stopped"
   ansible.builtin.service:
     name: "elasticsearch"
     state: "stopped"
@@ -10,21 +10,21 @@
 - name: "Remove all Elasticsearch datas"
   when: (ansible_play_hosts | length > 1)
   ansible.builtin.file:
-    path: "{{ elasticsearch_data_path }}"
+    path: "{{ install_elasticsearch_data_path }}"
     state: absent
 
 - name: "Create Elasticsearch data path"
   when: (ansible_play_hosts | length > 1)
   ansible.builtin.file:
-    path: "{{ elasticsearch_data_path }}"
+    path: "{{ install_elasticsearch_data_path }}"
     state: directory
     mode: "0770"
-    group: "{{ elasticsearch_group }}"
+    group: "{{ install_elasticsearch_group }}"
     owner: "root"
 
 - name: "Enable and start Elasticsearch"
-  register: elasticsearch_service_status
-  changed_when: not elasticsearch_service_status.state != "started"
+  register: install_elasticsearch_service_status
+  changed_when: not install_elasticsearch_service_status.state != "started"
   throttle: 1
   ansible.builtin.service:
     name: "elasticsearch"
@@ -33,8 +33,8 @@
     enabled: yes
 
 - name: "Restart Elasticsearch"
-  register: elasticsearch_service_status
-  changed_when: not elasticsearch_service_status.state != "restarted"
+  register: install_elasticsearch_service_status
+  changed_when: not install_elasticsearch_service_status.state != "restarted"
   throttle: 1
   ansible.builtin.service:
     name: "elasticsearch"

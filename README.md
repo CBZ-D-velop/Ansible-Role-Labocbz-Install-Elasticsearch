@@ -116,25 +116,25 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-elasticsearch_major_version: "8"
+install_elasticsearch_major_version: "8"
 
-elasticsearch_config_path: "/etc/elasticsearch"
-elasticsearch_host: "0.0.0.0"
-elasticsearch_port: 9200
-elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
-elasticsearch_data_path: "/var/lib/elasticsearch"
-elasticsearch_temp_path: "{{ elasticsearch_config_path }}/tmp"
+install_elasticsearch_config_path: "/etc/elasticsearch"
+install_elasticsearch_host: "0.0.0.0"
+install_elasticsearch_port: 9200
+install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
+install_elasticsearch_data_path: "/var/lib/elasticsearch"
+install_elasticsearch_temp_path: "{{ install_elasticsearch_config_path }}/tmp"
 
-elasticsearch_client_auth: false
-elasticsearch_ssl_authorities: "/etc/ssl/cacert"
+install_elasticsearch_client_auth: false
+install_elasticsearch_ssl_authorities: "/etc/ssl/cacert"
 
-elasticsearch_ssl_path: "{{ elasticsearch_config_path }}/ssl"
+install_elasticsearch_ssl_path: "{{ install_elasticsearch_config_path }}/ssl"
 
-elasticsearch_elastic_password: "myVeryStringP@ssword"
+install_elasticsearch_elastic_password: "myVeryStringP@ssword"
 
-elasticsearch_heap: "4g"
+install_elasticsearch_heap: "4g"
 
-elasticsearch_group: "elasticsearch"
+install_elasticsearch_group: "elasticsearch"
 
 ```
 
@@ -147,20 +147,20 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ```YAML
 # From inventory
 ---
-inv_elasticsearch_major_version: "8"
+inv_install_elasticsearch_major_version: "8"
 
-inv_elasticsearch_port: 9200
-inv_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
-inv_elasticsearch_data_path: "/var/lib/elasticsearch"
-inv_elasticsearch_config_path: "/etc/elasticsearch"
+inv_install_elasticsearch_port: 9200
+inv_install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
+inv_install_elasticsearch_data_path: "/var/lib/elasticsearch"
+inv_install_elasticsearch_config_path: "/etc/elasticsearch"
 
-inv_elasticsearch_client_auth: true
-inv_elasticsearch_ssl_path: "{{ inv_elasticsearch_config_path }}/ssl"
-inv_elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_path }}/My-Local-CA-Authority/My-Local-CA-Authority.crt"
+inv_install_elasticsearch_client_auth: true
+inv_install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_config_path }}/ssl"
+inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/My-Local-CA-Authority/My-Local-CA-Authority.crt"
 
-inv_elasticsearch_elastic_password: "myVeryStringP@ssword"
+inv_install_elasticsearch_elastic_password: "myVeryStringP@ssword"
 
-inv_elasticsearch_heap: "1g"
+inv_install_elasticsearch_heap: "1g"
 
 ```
 
@@ -179,16 +179,16 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     tags:
     - "labocbz.install_elasticsearch"
     vars:
-    elasticsearch_major_version: "{{ inv_elasticsearch_major_version }}"
-    elasticsearch_port: "{{ inv_elasticsearch_port }}"
-    elasticsearch_cluster_name: "{{ inv_elasticsearch_cluster_name }}"
-    elasticsearch_elastic_password: "{{ inv_elasticsearch_elastic_password }}"
-    elasticsearch_heap: "{{ inv_elasticsearch_heap }}"
-    elasticsearch_data_path: "{{ inv_elasticsearch_data_path }}"
-    elasticsearch_ssl_path: "{{ inv_elasticsearch_ssl_path }}"
-    elasticsearch_config_path: "{{ inv_elasticsearch_config_path }}"
-    elasticsearch_client_auth: "{{ inv_elasticsearch_client_auth }}"
-    elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_authorities }}"
+    install_elasticsearch_major_version: "{{ inv_install_elasticsearch_major_version }}"
+    install_elasticsearch_port: "{{ inv_install_elasticsearch_port }}"
+    install_elasticsearch_cluster_name: "{{ inv_install_elasticsearch_cluster_name }}"
+    install_elasticsearch_elastic_password: "{{ inv_install_elasticsearch_elastic_password }}"
+    install_elasticsearch_heap: "{{ inv_install_elasticsearch_heap }}"
+    install_elasticsearch_data_path: "{{ inv_install_elasticsearch_data_path }}"
+    install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_ssl_path }}"
+    install_elasticsearch_config_path: "{{ inv_install_elasticsearch_config_path }}"
+    install_elasticsearch_client_auth: "{{ inv_install_elasticsearch_client_auth }}"
+    install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_authorities }}"
     ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```

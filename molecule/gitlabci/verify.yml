@@ -7,16 +7,16 @@
   tasks:
 
     - name: "Get Elasticsearch service current state"
-      register: elasticsearch_service_status
-      failed_when: not elasticsearch_service_status.status.ActiveState == 'active'
+      register: install_elasticsearch_service_status
+      failed_when: not install_elasticsearch_service_status.status.ActiveState == 'active'
       ansible.builtin.systemd:
         name: "elasticsearch"
 
     - name: "Check Elasticsearch folders and conf"
-      when: inv_elasticsearch_ssl | default(false)
+      when: inv_install_elasticsearch_ssl | default(false)
       loop:
-        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.key"
-        - "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.crt"
+        - "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.key"
+        - "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.crt"
       loop_control:
         loop_var: folder_path
       register: folder_path
@@ -25,26 +25,26 @@
         path: "{{ folder_path }}"
 
     - name: "Verify all configured datas"
-      when: inv_elasticsearch_client_auth | default(false)
+      when: inv_install_elasticsearch_client_auth | default(false)
       block:
         - name: "Check Elasticsearch user's elastic password on each nodes, with client auth"
           register: cluster_infos
           failed_when: cluster_infos.status != 200
           changed_when: cluster_infos.status != 200
           ansible.builtin.uri:
-            url: "https://{{ inventory_hostname }}:{{ inv_elasticsearch_port }}/_cluster/health?wait_for_status=yellow&timeout=50s&pretty"
+            url: "https://{{ inventory_hostname }}:{{ inv_install_elasticsearch_port }}/_cluster/health?wait_for_status=yellow&timeout=50s&pretty"
             method: GET
             user: "elastic"
-            password: "{{ inv_elasticsearch_elastic_password }}"
+            password: "{{ inv_install_elasticsearch_elastic_password }}"
             headers:
               Content-Type: "application/json"
-            client_cert: "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.crt"
-            client_key: "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.key"
+            client_cert: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.crt"
+            client_key: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.key"
             validate_certs: false
             force_basic_auth: yes
 
         - name: "Verfify cluster name"
-          failed_when: cluster_infos.json.cluster_name != inv_elasticsearch_cluster_name
+          failed_when: cluster_infos.json.cluster_name != inv_install_elasticsearch_cluster_name
           ansible.builtin.setup:
 
         - name: "Verfify datas nodes"
@@ -56,24 +56,24 @@
           ansible.builtin.setup:
 
     - name: "Verify all configured datas"
-      when: not (inv_elasticsearch_client_auth | default(false))
+      when: not (inv_install_elasticsearch_client_auth | default(false))
       block:
         - name: "Check Elasticsearch user's elastic password on each nodes, without client auth"
           register: cluster_infos
           failed_when: cluster_infos.status != 200
           changed_when: cluster_infos.status != 200
           ansible.builtin.uri:
-            url: "https://{{ inventory_hostname }}:{{ inv_elasticsearch_port }}/_cluster/health?wait_for_status=yellow&timeout=50s&pretty"
+            url: "https://{{ inventory_hostname }}:{{ inv_install_elasticsearch_port }}/_cluster/health?wait_for_status=yellow&timeout=50s&pretty"
             method: GET
             user: "elastic"
-            password: "{{ inv_elasticsearch_elastic_password }}"
+            password: "{{ inv_install_elasticsearch_elastic_password }}"
             headers:
               Content-Type: "application/json"
             validate_certs: false
             force_basic_auth: yes
 
         - name: "Verfify cluster name"
-          failed_when: cluster_infos.json.cluster_name != inv_elasticsearch_cluster_name
+          failed_when: cluster_infos.json.cluster_name != inv_install_elasticsearch_cluster_name
           ansible.builtin.setup:
 
         - name: "Verfify datas nodes"
