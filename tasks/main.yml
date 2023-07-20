@@ -6,8 +6,10 @@
       - apt-transport-https
 
 - name: "Install Elasticsearch"
-  notify: 
-    - "Enable and start Elasticsearch"
+  notify:
+    - "Stop Elasticsearch"
+    - "Remove all Elasticsearch datas"
+    - "Create Elasticsearch data path"
     - "Restart Elasticsearch"
   block:
     - name: "Add Elasticsearch GPG apt Key"
@@ -19,18 +21,20 @@
         repo: "deb [arch=amd64] https://artifacts.elastic.co/packages/{{ elasticsearch_major_version }}.x/apt stable main"
 
     - name: "Update apt and install Elasticsearch"
+      notify:
+        - "Enable and start Elasticsearch"
       ansible.builtin.apt:
         update_cache: true
         name:
-          - elasticsearch
+          - "elasticsearch"
 
     - name: "Fix JVM options for Elasticsearch"
       ansible.builtin.template:
         src: "templates/jvm.options.j2"
         dest: "{{ elasticsearch_config_path }}/jvm.options"
-        mode: "0660"
-        group: "root"
-        owner: "{{ elasticsearch_group }}"
+        mode: "0770"
+        owner: "root"
+        group: "{{ elasticsearch_group }}"
         lstrip_blocks: yes
 
     - name: "Check if Elasticsearch temps dir exist"
@@ -48,33 +52,11 @@
         group: "{{ elasticsearch_group }}"
         mode: "0770"
 
-    - name: "Apply permissions on Elasticsearch conf dir"
-      ansible.builtin.file:
-        path: "{{ elasticsearch_config_path }}"
-        state: directory
-        recurse: yes
-        owner: "root"
-        group: "{{ elasticsearch_group }}"
-        mode: "0770"
-
-- name: "Configure Elasticsearch"
-  notify: 
-    - "Stop Elasticsearch"
-    - "Remove all Elasticsearch datas"
-    - "Create Elasticsearch data path"
-    - "Enable and start Elasticsearch"
-  block:
-    - name: "Gather facts from all hosts"
-      delegate_to: "{{ item }}"
-      delegate_facts: true
-      loop: "{{ elasticsearch_hosts }}"
-      ansible.builtin.setup:
-
     - name: "Import Elasticsearch configuration file"
       ansible.builtin.template:
         src: "templates/elasticsearch.yml.j2"
         dest: "{{ elasticsearch_config_path }}/elasticsearch.yml"
-        mode: "0755"
+        mode: "0770"
         group: "{{ elasticsearch_group }}"
         owner: "root"
         lstrip_blocks: yes
@@ -84,7 +66,7 @@
 
 - name: "Change the Elastic user password"
   run_once: true
-  when: elasticsearch_p12_password is defined
+  when: elasticsearch_elastic_password | default(false)
   block:
     - name: "Reset the password"
       ansible.builtin.command: "/usr/share/elasticsearch/bin/elasticsearch-reset-password -b -u elastic --force"
@@ -109,6 +91,8 @@
           password: "{{ elasticsearch_elastic_password }}"
         headers:
           Content-Type: "application/json"
+        validate_certs: false
+        force_basic_auth: yes
 
     - name: "Set the new password (with HTTPS, with client auth)"
       when: elasticsearch_client_auth
@@ -129,3 +113,5 @@
           Content-Type: "application/json"
         client_cert: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.crt"
         client_key: "{{ elasticsearch_ssl_path }}/{{ elasticsearch_cluster_name }}/{{ elasticsearch_cluster_name }}.key"
+        validate_certs: false
+        force_basic_auth: yes

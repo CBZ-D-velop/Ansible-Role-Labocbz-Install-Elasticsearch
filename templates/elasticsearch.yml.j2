@@ -75,16 +75,16 @@ http.port: {{ elasticsearch_port }}
 #
 #discovery.seed_hosts: ["host1", "host2"]
 discovery.seed_hosts:
-{% for host in elasticsearch_hosts %}
-  - {{ host }}:9300
+{% for host in ansible_play_hosts %}
+  - {{ hostvars[host]['ansible_default_ipv4']['address'] }}:9300
 {% endfor %}
 #
 # Bootstrap the cluster using an initial set of master-eligible nodes:
 #
 #cluster.initial_master_nodes: ["node-1", "node-2"]
 cluster.initial_master_nodes:
-{% for host in elasticsearch_hosts %}
-  - {{ host }}:9300
+{% for host in ansible_play_hosts %}
+  - {{ host }}
 {% endfor %}
 #
 # For more information, consult the discovery and cluster formation module documentation.

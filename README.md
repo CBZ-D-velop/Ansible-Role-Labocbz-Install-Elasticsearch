@@ -125,7 +125,6 @@ elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 elasticsearch_data_path: "/var/lib/elasticsearch"
 elasticsearch_temp_path: "{{ elasticsearch_config_path }}/tmp"
 
-elasticsearch_p12_password: "myPassword"
 elasticsearch_client_auth: false
 elasticsearch_ssl_authorities: "/etc/ssl/cacert"
 
@@ -155,7 +154,6 @@ inv_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 inv_elasticsearch_data_path: "/var/lib/elasticsearch"
 inv_elasticsearch_config_path: "/etc/elasticsearch"
 
-inv_elasticsearch_p12_password: "secret"
 inv_elasticsearch_client_auth: true
 inv_elasticsearch_ssl_path: "{{ inv_elasticsearch_config_path }}/ssl"
 inv_elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_path }}/My-Local-CA-Authority/My-Local-CA-Authority.crt"
@@ -187,7 +185,6 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     elasticsearch_elastic_password: "{{ inv_elasticsearch_elastic_password }}"
     elasticsearch_heap: "{{ inv_elasticsearch_heap }}"
     elasticsearch_data_path: "{{ inv_elasticsearch_data_path }}"
-    elasticsearch_p12_password: "{{ inv_elasticsearch_p12_password }}"
     elasticsearch_ssl_path: "{{ inv_elasticsearch_ssl_path }}"
     elasticsearch_config_path: "{{ inv_elasticsearch_config_path }}"
     elasticsearch_client_auth: "{{ inv_elasticsearch_client_auth }}"

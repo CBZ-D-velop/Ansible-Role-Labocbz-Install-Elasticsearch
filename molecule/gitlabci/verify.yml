@@ -40,17 +40,19 @@
               Content-Type: "application/json"
             client_cert: "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.crt"
             client_key: "{{ inv_elasticsearch_ssl_path }}/{{ inv_elasticsearch_cluster_name }}/{{ inv_elasticsearch_cluster_name }}.key"
+            validate_certs: false
+            force_basic_auth: yes
 
         - name: "Verfify cluster name"
           failed_when: cluster_infos.json.cluster_name != inv_elasticsearch_cluster_name
           ansible.builtin.setup:
 
         - name: "Verfify datas nodes"
-          failed_when: cluster_infos.json.number_of_data_nodes != inv_elasticsearch_hosts | length
+          failed_when: cluster_infos.json.number_of_data_nodes != ansible_play_hosts | length
           ansible.builtin.setup:
 
         - name: "Verfify cluster number nodes"
-          failed_when: cluster_infos.json.number_of_nodes != inv_elasticsearch_hosts | length
+          failed_when: cluster_infos.json.number_of_nodes != ansible_play_hosts | length
           ansible.builtin.setup:
 
     - name: "Verify all configured datas"
@@ -67,15 +69,17 @@
             password: "{{ inv_elasticsearch_elastic_password }}"
             headers:
               Content-Type: "application/json"
+            validate_certs: false
+            force_basic_auth: yes
 
         - name: "Verfify cluster name"
           failed_when: cluster_infos.json.cluster_name != inv_elasticsearch_cluster_name
           ansible.builtin.setup:
 
         - name: "Verfify datas nodes"
-          failed_when: cluster_infos.json.number_of_data_nodes != inv_elasticsearch_hosts | length
+          failed_when: cluster_infos.json.number_of_data_nodes != ansible_play_hosts | length
           ansible.builtin.setup:
 
         - name: "Verfify cluster number nodes"
-          failed_when: cluster_infos.json.number_of_nodes != inv_elasticsearch_hosts | length
+          failed_when: cluster_infos.json.number_of_nodes != ansible_play_hosts | length
           ansible.builtin.setup:

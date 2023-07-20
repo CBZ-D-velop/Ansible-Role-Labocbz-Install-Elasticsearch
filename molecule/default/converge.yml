@@ -21,7 +21,6 @@
         elasticsearch_data_path: "{{ inv_elasticsearch_data_path }}"
         elasticsearch_ssl_path: "{{ inv_elasticsearch_ssl_path }}"
         elasticsearch_config_path: "{{ inv_elasticsearch_config_path }}"
-        elasticsearch_hosts: "{{ inv_elasticsearch_hosts }}"
         elasticsearch_client_auth: "{{ inv_elasticsearch_client_auth }}"
         elasticsearch_ssl_authorities: "{{ inv_elasticsearch_ssl_authorities }}"
         elasticsearch_ssl: "{{ inv_elasticsearch_ssl }}"

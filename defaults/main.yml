@@ -6,7 +6,6 @@ elasticsearch_host: "0.0.0.0"
 elasticsearch_port: 9200
 elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 elasticsearch_data_path: "/var/lib/elasticsearch"
-elasticsearch_hosts: "{{ inventory_hostname }}"
 elasticsearch_temp_path: "{{ elasticsearch_config_path }}/tmp"
 
 elasticsearch_ssl_path: "{{ elasticsearch_config_path }}/ssl"
