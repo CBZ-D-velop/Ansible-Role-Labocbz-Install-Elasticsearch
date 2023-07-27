@@ -117,9 +117,9 @@ xpack.security.enrollment.enabled: true
 # Enable encryption and mutual authentication between cluster nodes
 xpack.security.transport.ssl.enabled: true
 xpack.security.transport.ssl.verification_mode: certificate
-xpack.security.transport.ssl.key: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.key"
-xpack.security.transport.ssl.certificate: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.crt"
-{% if install_elasticsearch_client_auth %}
+xpack.security.transport.ssl.key: "{{ install_elasticsearch_ssl_key }}"
+xpack.security.transport.ssl.certificate: "{{ install_elasticsearch_ssl_crt }}"
+{% if install_elasticsearch_client_auth | default(false) %}
 xpack.security.transport.ssl.client_authentication: required
 {% endif %}
 # Enable encryption for HTTP API client connections, such as Kibana, Logstash, and Agents

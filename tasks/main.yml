@@ -101,7 +101,6 @@
           password: "{{ install_elasticsearch_elastic_password }}"
         headers:
           Content-Type: "application/json"
-        validate_certs: false
         force_basic_auth: yes
 
     - name: "Set the new password (with HTTPS, with client auth)"
@@ -121,7 +120,6 @@
           password: "{{ install_elasticsearch_elastic_password }}"
         headers:
           Content-Type: "application/json"
-        client_cert: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.crt"
-        client_key: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.key"
-        validate_certs: false
+        client_cert: "{{ install_elasticsearch_ssl_crt }}"
+        client_key: "{{ install_elasticsearch_ssl_key }}"
         force_basic_auth: yes

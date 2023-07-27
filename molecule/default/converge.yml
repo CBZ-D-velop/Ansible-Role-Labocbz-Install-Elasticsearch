@@ -24,5 +24,7 @@
         install_elasticsearch_client_auth: "{{ inv_install_elasticsearch_client_auth }}"
         install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_authorities }}"
         install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
+        install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
+        install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
       ansible.builtin.include_role:
         name: "labocbz.install_elasticsearch"

@@ -15,8 +15,8 @@
     - name: "Check Elasticsearch folders and conf"
       when: inv_install_elasticsearch_ssl | default(false)
       loop:
-        - "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.key"
-        - "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.crt"
+        - "{{ inv_install_elasticsearch_ssl_key }}"
+        - "{{ inv_install_elasticsearch_ssl_crt }}"
       loop_control:
         loop_var: folder_path
       register: folder_path
@@ -38,9 +38,8 @@
             password: "{{ inv_install_elasticsearch_elastic_password }}"
             headers:
               Content-Type: "application/json"
-            client_cert: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.crt"
-            client_key: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.key"
-            validate_certs: false
+            client_cert: "{{ inv_install_elasticsearch_ssl_crt }}"
+            client_key: "{{ inv_install_elasticsearch_ssl_key }}"
             force_basic_auth: yes
 
         - name: "Verfify cluster name"
@@ -69,7 +68,6 @@
             password: "{{ inv_install_elasticsearch_elastic_password }}"
             headers:
               Content-Type: "application/json"
-            validate_certs: false
             force_basic_auth: yes
 
         - name: "Verfify cluster name"

@@ -2,13 +2,17 @@
 inv_install_elasticsearch_major_version: "8"
 
 inv_install_elasticsearch_port: 9200
-inv_install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
+inv_install_elasticsearch_cluster_name: "my-elasticcsearch-cluster-role.domain.tld"
 inv_install_elasticsearch_data_path: "/var/lib/elasticsearch"
 inv_install_elasticsearch_config_path: "/etc/elasticsearch"
 
 inv_install_elasticsearch_client_auth: true
 inv_install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_config_path }}/ssl"
-inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/My-Local-Middle-Two-CA/My-Local-Middle-Two-CA.pem"
+inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/my-elasticcsearch-cluster-role.domain.tld/ca-chain.pem.crt"
+
+inv_install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.key"
+inv_install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.crt"
+
 
 inv_install_elasticsearch_elastic_password: "myVeryStringP@ssword"
 inv_install_elasticsearch_ssl: true
