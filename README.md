@@ -125,12 +125,13 @@ install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
 install_elasticsearch_data_path: "/var/lib/elasticsearch"
 install_elasticsearch_temp_path: "{{ install_elasticsearch_config_path }}/tmp"
 
-install_elasticsearch_client_auth: false
-install_elasticsearch_ssl_authorities: "/etc/ssl/cacert"
-
 install_elasticsearch_ssl_path: "{{ install_elasticsearch_config_path }}/ssl"
-
+install_elasticsearch_client_auth: false
 install_elasticsearch_elastic_password: "myVeryStringP@ssword"
+install_elasticsearch_ssl: true
+install_elasticsearch_ssl_authorities: "/etc/ssl/cacert"
+install_elasticsearch_ssl_key: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.key"
+install_elasticsearch_ssl_crt: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.crt"
 
 install_elasticsearch_heap: "4g"
 
@@ -150,15 +151,20 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 inv_install_elasticsearch_major_version: "8"
 
 inv_install_elasticsearch_port: 9200
-inv_install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
+inv_install_elasticsearch_cluster_name: "my-elasticcsearch-cluster-role.domain.tld"
 inv_install_elasticsearch_data_path: "/var/lib/elasticsearch"
 inv_install_elasticsearch_config_path: "/etc/elasticsearch"
 
 inv_install_elasticsearch_client_auth: true
 inv_install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_config_path }}/ssl"
-inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/My-Local-CA-Authority/My-Local-CA-Authority.crt"
+inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/my-elasticcsearch-cluster-role.domain.tld/ca-chain.pem.crt"
+
+inv_install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.key"
+inv_install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.crt"
+
 
 inv_install_elasticsearch_elastic_password: "myVeryStringP@ssword"
+inv_install_elasticsearch_ssl: true
 
 inv_install_elasticsearch_heap: "1g"
 
@@ -189,6 +195,9 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     install_elasticsearch_config_path: "{{ inv_install_elasticsearch_config_path }}"
     install_elasticsearch_client_auth: "{{ inv_install_elasticsearch_client_auth }}"
     install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_authorities }}"
+    install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
+    install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
+    install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
     ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```
@@ -213,6 +222,10 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * SSL/TLS Materials are not handled by the role
 * Certs/CA have to be installed previously/after this role use
+
+### 2023-07-27: Another Crypto Update
+
+* Role permit now a custome key/cert name
 
 ## Authors
 
