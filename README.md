@@ -197,7 +197,7 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_authorities }}"
     install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
     install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
-    install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt: }}"
+    install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
     ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```
