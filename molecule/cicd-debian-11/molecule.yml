@@ -98,6 +98,7 @@ scenario:
   test_sequence:
     - "destroy"
     - "syntax"
+    - "dependency"
     - "create"
     - "prepare"
     - "converge"
