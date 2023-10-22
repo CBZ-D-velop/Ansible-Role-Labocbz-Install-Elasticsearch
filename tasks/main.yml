@@ -1,7 +1,7 @@
 ---
 - name: "Install packages"
   ansible.builtin.package:
-    update_cache: true
+    update_cache: false
     name:
       - apt-transport-https
 
@@ -23,7 +23,7 @@
 
     - name: "Update apt and install Elasticsearch"
       ansible.builtin.apt:
-        update_cache: true
+        update_cache: false
         name:
           - "elasticsearch"
 
