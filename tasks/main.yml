@@ -79,10 +79,11 @@
   when: install_elasticsearch_elastic_password | default(false)
   block:
     - name: "Reset the password"
-      ansible.builtin.command: "/usr/share/elasticsearch/bin/elasticsearch-reset-password -b -u elastic --force"
+      run_once: true
       register: elastic_password
       changed_when: elastic_password.stdout == ""
       failed_when: elastic_password.rc != 0
+      ansible.builtin.command: "/usr/share/elasticsearch/bin/elasticsearch-reset-password -b -u elastic --force"
 
     - name: "Set the new password (with HTTPS, no client auth)"
       when: not install_elasticsearch_client_auth
@@ -91,6 +92,7 @@
       register: output
       failed_when: output.json != {}
       changed_when: output.json != {}
+      run_once: true
       ansible.builtin.uri:
         url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
         method: POST
@@ -110,6 +112,7 @@
       register: output
       failed_when: output.json != {}
       changed_when: output.json != {}
+      run_once: true
       ansible.builtin.uri:
         url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
         method: POST
