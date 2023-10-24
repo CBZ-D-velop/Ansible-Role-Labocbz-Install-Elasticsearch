@@ -18,3 +18,5 @@ inv_install_elasticsearch_elastic_password: "myVeryStringP@ssword"
 inv_install_elasticsearch_ssl: true
 
 inv_install_elasticsearch_heap: "1g"
+
+#inv_install_elasticsearch_seed_host: "{{ inventory_hostname }}"
