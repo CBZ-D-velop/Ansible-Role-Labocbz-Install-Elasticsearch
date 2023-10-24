@@ -137,6 +137,8 @@ install_elasticsearch_heap: "4g"
 
 install_elasticsearch_group: "elasticsearch"
 
+install_elasticsearch_seed_host: "{{ inventory_hostname }}"
+
 ```
 
 The best way is to modify these vars by copy the ./default/main.yml file into the ./vars and edit with your personnals requirements.
@@ -168,6 +170,8 @@ inv_install_elasticsearch_ssl: true
 
 inv_install_elasticsearch_heap: "1g"
 
+inv_inv_install_elasticsearch_seed_host: "{{ inventory_hostname }}"
+
 ```
 
 ```YAML
@@ -198,6 +202,7 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
     install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
     install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
+    install_elasticsearch_seed_host: "{{ inv_install_elasticsearch_seed_host }}"
     ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```
