@@ -76,10 +76,12 @@
 
 - name: "Change the Elastic user password"
   run_once: true
+  delegate_to: "{{ groups['all'] | first }}"
   when: install_elasticsearch_elastic_password | default(false)
   block:
     - name: "Reset the password"
       run_once: true
+      delegate_to: "{{ groups['all'] | first }}"
       register: elastic_password
       changed_when: elastic_password.stdout == ""
       failed_when: elastic_password.rc != 0
@@ -93,6 +95,7 @@
       failed_when: output.json != {}
       changed_when: output.json != {}
       run_once: true
+      delegate_to: "{{ groups['all'] | first }}"
       ansible.builtin.uri:
         url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
         method: POST
@@ -113,6 +116,7 @@
       failed_when: output.json != {}
       changed_when: output.json != {}
       run_once: true
+      delegate_to: "{{ groups['all'] | first }}"
       ansible.builtin.uri:
         url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
         method: POST
