@@ -76,12 +76,9 @@
 
 - name: "Change the Elastic user password"
   run_once: true
-  delegate_to: "{{ install_elasticsearch_seed_host | default(play_hosts[0]) }}"
   when: install_elasticsearch_elastic_password | default(false)
   block:
     - name: "Reset the password"
-      run_once: true
-      delegate_to: "{{ install_elasticsearch_seed_host | default(play_hosts[0]) }}"
       register: elastic_password
       changed_when: elastic_password.stdout == ""
       failed_when: elastic_password.rc != 0
@@ -94,8 +91,6 @@
       register: output
       failed_when: output.json != {}
       changed_when: output.json != {}
-      run_once: true
-      delegate_to: "{{ install_elasticsearch_seed_host | default(play_hosts[0]) }}"
       ansible.builtin.uri:
         url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
         method: POST
@@ -115,8 +110,6 @@
       register: output
       failed_when: output.json != {}
       changed_when: output.json != {}
-      run_once: true
-      delegate_to: "{{ install_elasticsearch_seed_host | default(play_hosts[0]) }}"
       ansible.builtin.uri:
         url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
         method: POST
