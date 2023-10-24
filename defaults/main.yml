@@ -19,5 +19,3 @@ install_elasticsearch_ssl_crt: "{{ install_elasticsearch_ssl_path }}/{{ install_
 install_elasticsearch_heap: "4g"
 
 install_elasticsearch_group: "elasticsearch"
-
-install_elasticsearch_seed_host: "{{ inventory_hostname }}"
