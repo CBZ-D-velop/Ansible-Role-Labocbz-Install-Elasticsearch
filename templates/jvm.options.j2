@@ -61,7 +61,7 @@
 #-Djava.io.tmpdir=${ES_TMPDIR}
 -Djava.io.tmpdir={{ install_elasticsearch_temp_path }}
 
-## heap dumps
+## heap dumpsl
 
 # generate a heap dump when an allocation from the Java heap fails; heap dumps
 # are created in the working directory of the JVM unless an alternative path is
@@ -79,5 +79,5 @@
 -XX:ErrorFile=/var/log/elasticsearch/hs_err_pid%p.log
 
 ## GC logging
--Xlog:gc*,gc+age=trace,safepoint:file=/var/log/elasticsearch/gc.log:utctime,level,pid,tags:filecount=32,filesize=64m
+#-Xlog:gc*,gc+age=trace,safepoint:file=/var/log/elasticsearch/gc.log:utctime,level,pid,tags:filecount=32,filesize=64m
 

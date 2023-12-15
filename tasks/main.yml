@@ -7,9 +7,6 @@
 
 - name: "Install Elasticsearch"
   notify:
-    - "Stop Elasticsearch"
-    - "Remove all Elasticsearch datas"
-    - "Create Elasticsearch data path"
     - "Enable and start Elasticsearch"
     - "Restart Elasticsearch"
   block:
@@ -31,9 +28,9 @@
       ansible.builtin.template:
         src: "templates/jvm.options.j2"
         dest: "{{ install_elasticsearch_config_path }}/jvm.options"
-        mode: "0770"
-        owner: "root"
+        owner: "{{ install_elasticsearch_user }}"
         group: "{{ install_elasticsearch_group }}"
+        mode: "0700"
         lstrip_blocks: yes
 
     - name: "Check if Elasticsearch temps dir exist"
@@ -47,29 +44,35 @@
         path: "{{ install_elasticsearch_temp_path }}"
         state: directory
         recurse: yes
-        owner: "root"
+        owner: "{{ install_elasticsearch_user }}"
         group: "{{ install_elasticsearch_group }}"
-        mode: "0770"
+        mode: "0700"
 
     - name: "Import Elasticsearch configuration file"
       ansible.builtin.template:
         src: "templates/elasticsearch.yml.j2"
         dest: "{{ install_elasticsearch_config_path }}/elasticsearch.yml"
-        mode: "0770"
+        owner: "{{ install_elasticsearch_user }}"
         group: "{{ install_elasticsearch_group }}"
-        owner: "root"
+        mode: "0700"
         lstrip_blocks: yes
 
-    - name: "Apply permissions on Elasticsearch conf dir"
+    - name: "Apply permissions on Elasticsearch dirs"
+      loop:
+        - "{{ install_elasticsearch_temp_path }}"
+        - "{{ install_elasticsearch_config_path }}"
+        - "{{ install_elasticsearch_data_path }}"
+      loop_control:
+        loop_var: path
       register: output
-      changed_when: output.size <= 0
+      changed_when: output.size < 0
       ansible.builtin.file:
-        path: "{{ install_elasticsearch_config_path }}"
+        path: "{{ path }}"
         state: directory
         recurse: yes
-        owner: "root"
+        owner: "{{ install_elasticsearch_user }}"
         group: "{{ install_elasticsearch_group }}"
-        mode: "0770"
+        mode: "0700"
 
 - name: "Flush handlers"
   ansible.builtin.meta: flush_handlers

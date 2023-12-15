@@ -1,27 +1,4 @@
 ---
-- name: "Stop Elasticsearch"
-  register: install_elasticsearch_service_status
-  when: (ansible_play_hosts | length > 1)
-  changed_when: not install_elasticsearch_service_status.status.ActiveState != "stopped"
-  ansible.builtin.service:
-    name: "elasticsearch"
-    state: "stopped"
-
-- name: "Remove all Elasticsearch datas"
-  when: (ansible_play_hosts | length > 1)
-  ansible.builtin.file:
-    path: "{{ install_elasticsearch_data_path }}"
-    state: absent
-
-- name: "Create Elasticsearch data path"
-  when: (ansible_play_hosts | length > 1)
-  ansible.builtin.file:
-    path: "{{ install_elasticsearch_data_path }}"
-    state: directory
-    mode: "0770"
-    group: "{{ install_elasticsearch_group }}"
-    owner: "root"
-
 - name: "Enable and start Elasticsearch"
   register: install_elasticsearch_service_status
   changed_when: not install_elasticsearch_service_status.state != "started"

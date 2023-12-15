@@ -116,6 +116,9 @@ Some vars a required to run this role:
 
 ```YAML
 ---
+install_elasticsearch_user: "elasticsearch"
+install_elasticsearch_group: "elasticsearch"
+
 install_elasticsearch_major_version: "8"
 
 install_elasticsearch_config_path: "/etc/elasticsearch"
@@ -151,13 +154,13 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 inv_install_elasticsearch_major_version: "8"
 
 inv_install_elasticsearch_port: 9200
-inv_install_elasticsearch_cluster_name: "my-elasticcsearch-cluster-role.domain.tld"
+inv_install_elasticsearch_cluster_name: "my-elasticsearch-cluster.domain.tld"
 inv_install_elasticsearch_data_path: "/var/lib/elasticsearch"
 inv_install_elasticsearch_config_path: "/etc/elasticsearch"
 
 inv_install_elasticsearch_client_auth: true
 inv_install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_config_path }}/ssl"
-inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/my-elasticcsearch-cluster-role.domain.tld/ca-chain.pem.crt"
+inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/my-elasticsearch-cluster.domain.tld/ca-chain.pem.crt"
 
 inv_install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.key"
 inv_install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.crt"
@@ -182,9 +185,9 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
 
 ```YAML
 - name: "Include labocbz.install_elasticsearch"
-    tags:
+  tags:
     - "labocbz.install_elasticsearch"
-    vars:
+  vars:
     install_elasticsearch_major_version: "{{ inv_install_elasticsearch_major_version }}"
     install_elasticsearch_port: "{{ inv_install_elasticsearch_port }}"
     install_elasticsearch_cluster_name: "{{ inv_install_elasticsearch_cluster_name }}"
@@ -198,7 +201,7 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
     install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
     install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
-    ansible.builtin.include_role:
+  ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```
 
@@ -233,6 +236,10 @@ Here you can put your change to keep a trace of your work and decisions.
 * Molecule now use remote Docker image by Lord Robin Crombez
 * Molecule now use custom Docker image in CI/CD by env vars
 * New CICD with needs and optimization
+
+### 2023-12-15: System users
+
+* Role can now use system users and address groups
 
 ## Authors
 
