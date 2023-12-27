@@ -116,9 +116,6 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-install_elasticsearch_user: "elasticsearch"
-install_elasticsearch_group: "elasticsearch"
-
 install_elasticsearch_major_version: "8"
 
 install_elasticsearch_config_path: "/etc/elasticsearch"
@@ -138,7 +135,14 @@ install_elasticsearch_ssl_crt: "{{ install_elasticsearch_ssl_path }}/{{ install_
 
 install_elasticsearch_heap: "4g"
 
+install_elasticsearch_user: "elasticsearch"
 install_elasticsearch_group: "elasticsearch"
+
+install_elasticsearch_seed_hosts:
+- "{{ inventory_hostname }}"
+
+install_elasticsearch_initial_master_nodes:
+- "{{ inventory_hostname }}"
 
 ```
 
@@ -151,6 +155,10 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ```YAML
 # From inventory
 ---
+inv_prepare_host_system_users:
+  - login: "elasticsearch"
+    group: "elasticsearch"
+
 inv_install_elasticsearch_major_version: "8"
 
 inv_install_elasticsearch_port: 9200
@@ -170,6 +178,16 @@ inv_install_elasticsearch_elastic_password: "myVeryStringP@ssword"
 inv_install_elasticsearch_ssl: true
 
 inv_install_elasticsearch_heap: "1g"
+
+inv_install_elasticsearch_seed_hosts:
+- "molecule-local-instance-1-install-elasticsearch"
+- "molecule-local-instance-2-install-elasticsearch"
+- "molecule-local-instance-3-install-elasticsearch"
+
+inv_install_elasticsearch_initial_master_nodes:
+- "molecule-local-instance-1-install-elasticsearch"
+- "molecule-local-instance-2-install-elasticsearch"
+- "molecule-local-instance-3-install-elasticsearch"
 
 ```
 
@@ -201,6 +219,8 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
     install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
     install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
+    install_elasticsearch_seed_hosts: "{{ inv_install_elasticsearch_seed_hosts }}"
+    install_elasticsearch_initial_master_nodes: "{{ inv_install_elasticsearch_initial_master_nodes }}"
   ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```
@@ -240,6 +260,11 @@ Here you can put your change to keep a trace of your work and decisions.
 ### 2023-12-15: System users
 
 * Role can now use system users and address groups
+
+### 2023-12-27: Seed and Masters
+
+* You can now define your seeds and masters with a var.
+* Edited JVM options for paths
 
 ## Authors
 

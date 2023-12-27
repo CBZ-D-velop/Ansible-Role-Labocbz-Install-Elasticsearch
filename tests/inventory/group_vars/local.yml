@@ -23,4 +23,12 @@ inv_install_elasticsearch_ssl: true
 
 inv_install_elasticsearch_heap: "1g"
 
-#inv_install_elasticsearch_seed_host: "{{ inventory_hostname }}"
+inv_install_elasticsearch_seed_hosts:
+- "molecule-local-instance-1-install-elasticsearch"
+- "molecule-local-instance-2-install-elasticsearch"
+- "molecule-local-instance-3-install-elasticsearch"
+
+inv_install_elasticsearch_initial_master_nodes:
+- "molecule-local-instance-1-install-elasticsearch"
+- "molecule-local-instance-2-install-elasticsearch"
+- "molecule-local-instance-3-install-elasticsearch"

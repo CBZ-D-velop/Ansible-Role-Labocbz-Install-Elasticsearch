@@ -20,3 +20,9 @@ install_elasticsearch_heap: "4g"
 
 install_elasticsearch_user: "elasticsearch"
 install_elasticsearch_group: "elasticsearch"
+
+install_elasticsearch_seed_hosts:
+- "{{ inventory_hostname }}"
+
+install_elasticsearch_initial_master_nodes:
+- "{{ inventory_hostname }}"
