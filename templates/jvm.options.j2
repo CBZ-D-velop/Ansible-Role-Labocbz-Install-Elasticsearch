@@ -55,7 +55,7 @@
 ##
 ################################################################
 
--XX:+UseG1GC
+#-XX:+UseG1GC
 
 ## JVM temporary directory
 #-Djava.io.tmpdir=${ES_TMPDIR}
@@ -73,7 +73,7 @@
 
 # specify an alternative path for heap dumps; ensure the directory exists and
 # has sufficient space
--XX:HeapDumpPath=/var/lib/elasticsearch
+-XX:HeapDumpPath={{ install_elasticsearch_data_path }}
 
 # specify an alternative path for JVM fatal error logs
 -XX:ErrorFile=/var/log/elasticsearch/hs_err_pid%p.log

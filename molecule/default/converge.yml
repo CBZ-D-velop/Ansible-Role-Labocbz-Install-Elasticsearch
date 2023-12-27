@@ -26,5 +26,7 @@
         install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
         install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
         install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
+        install_elasticsearch_seed_hosts: "{{ inv_install_elasticsearch_seed_hosts }}"
+        install_elasticsearch_initial_master_nodes: "{{ inv_install_elasticsearch_initial_master_nodes }}"
       ansible.builtin.include_role:
         name: "labocbz.install_elasticsearch"
