@@ -1,7 +1,7 @@
 ---
 - name: "Enable and start Elasticsearch"
-  register: install_elasticsearch_service_status
-  changed_when: not install_elasticsearch_service_status.state != "started"
+  register: install_elasticsearch__service_status
+  changed_when: not install_elasticsearch__service_status.state != "started"
   throttle: 1
   ansible.builtin.service:
     name: "elasticsearch"
@@ -10,8 +10,8 @@
     enabled: yes
 
 - name: "Restart Elasticsearch"
-  register: install_elasticsearch_service_status
-  changed_when: not install_elasticsearch_service_status.state != "restarted"
+  register: install_elasticsearch__service_status
+  changed_when: not install_elasticsearch__service_status.state != "restarted"
   throttle: 1
   ansible.builtin.service:
     name: "elasticsearch"

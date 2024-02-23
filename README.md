@@ -116,32 +116,32 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-install_elasticsearch_major_version: "8"
+install_elasticsearch__major_version: "8"
 
-install_elasticsearch_config_path: "/etc/elasticsearch"
-install_elasticsearch_host: "0.0.0.0"
-install_elasticsearch_port: 9200
-install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
-install_elasticsearch_data_path: "/var/lib/elasticsearch"
-install_elasticsearch_temp_path: "{{ install_elasticsearch_config_path }}/tmp"
+install_elasticsearch__config_path: "/etc/elasticsearch"
+install_elasticsearch__host: "0.0.0.0"
+install_elasticsearch__port: 9200
+install_elasticsearch__cluster_name: "my.elasticsearch-cluster.tld"
+install_elasticsearch__data_path: "/var/lib/elasticsearch"
+install_elasticsearch__temp_path: "{{ install_elasticsearch__config_path }}/tmp"
 
-install_elasticsearch_ssl_path: "{{ install_elasticsearch_config_path }}/ssl"
-install_elasticsearch_client_auth: false
-install_elasticsearch_elastic_password: "myVeryStringP@ssword"
-install_elasticsearch_ssl: true
-install_elasticsearch_ssl_authorities: "/etc/ssl/cacert"
-install_elasticsearch_ssl_key: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.key"
-install_elasticsearch_ssl_crt: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.crt"
+install_elasticsearch__ssl_path: "{{ install_elasticsearch__config_path }}/ssl"
+install_elasticsearch__client_auth: false
+install_elasticsearch__elastic_password: "myVeryStringP@ssword"
+install_elasticsearch__ssl: true
+install_elasticsearch__ssl_authorities: "/etc/ssl/cacert"
+install_elasticsearch__ssl_key: "{{ install_elasticsearch__ssl_path }}/{{ install_elasticsearch__cluster_name }}/{{ install_elasticsearch__cluster_name }}.key"
+install_elasticsearch__ssl_crt: "{{ install_elasticsearch__ssl_path }}/{{ install_elasticsearch__cluster_name }}/{{ install_elasticsearch__cluster_name }}.crt"
 
-install_elasticsearch_heap: "4g"
+install_elasticsearch__heap: "4g"
 
-install_elasticsearch_user: "elasticsearch"
-install_elasticsearch_group: "elasticsearch"
+install_elasticsearch__user: "elasticsearch"
+install_elasticsearch__group: "elasticsearch"
 
-install_elasticsearch_seed_hosts:
+install_elasticsearch__seed_hosts:
 - "{{ inventory_hostname }}"
 
-install_elasticsearch_initial_master_nodes:
+install_elasticsearch__initial_master_nodes:
 - "{{ inventory_hostname }}"
 
 ```
@@ -155,36 +155,36 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ```YAML
 # From inventory
 ---
-inv_prepare_host_system_users:
+inv_prepare_host__system_users:
   - login: "elasticsearch"
     group: "elasticsearch"
 
-inv_install_elasticsearch_major_version: "8"
+inv_install_elasticsearch__major_version: "8"
 
-inv_install_elasticsearch_port: 9200
-inv_install_elasticsearch_cluster_name: "my-elasticsearch-cluster.domain.tld"
-inv_install_elasticsearch_data_path: "/var/lib/elasticsearch"
-inv_install_elasticsearch_config_path: "/etc/elasticsearch"
+inv_install_elasticsearch__port: 9200
+inv_install_elasticsearch__cluster_name: "my-elasticsearch-cluster.domain.tld"
+inv_install_elasticsearch__data_path: "/var/lib/elasticsearch"
+inv_install_elasticsearch__config_path: "/etc/elasticsearch"
 
-inv_install_elasticsearch_client_auth: true
-inv_install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_config_path }}/ssl"
-inv_install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_path }}/my-elasticsearch-cluster.domain.tld/ca-chain.pem.crt"
+inv_install_elasticsearch__client_auth: true
+inv_install_elasticsearch__ssl_path: "{{ inv_install_elasticsearch__config_path }}/ssl"
+inv_install_elasticsearch__ssl_authorities: "{{ inv_install_elasticsearch__ssl_path }}/my-elasticsearch-cluster.domain.tld/ca-chain.pem.crt"
 
-inv_install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.key"
-inv_install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_path }}/{{ inv_install_elasticsearch_cluster_name }}/{{ inv_install_elasticsearch_cluster_name }}.pem.crt"
+inv_install_elasticsearch__ssl_key: "{{ inv_install_elasticsearch__ssl_path }}/{{ inv_install_elasticsearch__cluster_name }}/{{ inv_install_elasticsearch__cluster_name }}.pem.key"
+inv_install_elasticsearch__ssl_crt: "{{ inv_install_elasticsearch__ssl_path }}/{{ inv_install_elasticsearch__cluster_name }}/{{ inv_install_elasticsearch__cluster_name }}.pem.crt"
 
 
-inv_install_elasticsearch_elastic_password: "myVeryStringP@ssword"
-inv_install_elasticsearch_ssl: true
+inv_install_elasticsearch__elastic_password: "myVeryStringP@ssword"
+inv_install_elasticsearch__ssl: true
 
-inv_install_elasticsearch_heap: "1g"
+inv_install_elasticsearch__heap: "1g"
 
-inv_install_elasticsearch_seed_hosts:
+inv_install_elasticsearch__seed_hosts:
 - "molecule-local-instance-1-install-elasticsearch"
 - "molecule-local-instance-2-install-elasticsearch"
 - "molecule-local-instance-3-install-elasticsearch"
 
-inv_install_elasticsearch_initial_master_nodes:
+inv_install_elasticsearch__initial_master_nodes:
 - "molecule-local-instance-1-install-elasticsearch"
 - "molecule-local-instance-2-install-elasticsearch"
 - "molecule-local-instance-3-install-elasticsearch"
@@ -206,21 +206,21 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
   tags:
     - "labocbz.install_elasticsearch"
   vars:
-    install_elasticsearch_major_version: "{{ inv_install_elasticsearch_major_version }}"
-    install_elasticsearch_port: "{{ inv_install_elasticsearch_port }}"
-    install_elasticsearch_cluster_name: "{{ inv_install_elasticsearch_cluster_name }}"
-    install_elasticsearch_elastic_password: "{{ inv_install_elasticsearch_elastic_password }}"
-    install_elasticsearch_heap: "{{ inv_install_elasticsearch_heap }}"
-    install_elasticsearch_data_path: "{{ inv_install_elasticsearch_data_path }}"
-    install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_ssl_path }}"
-    install_elasticsearch_config_path: "{{ inv_install_elasticsearch_config_path }}"
-    install_elasticsearch_client_auth: "{{ inv_install_elasticsearch_client_auth }}"
-    install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_authorities }}"
-    install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
-    install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
-    install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
-    install_elasticsearch_seed_hosts: "{{ inv_install_elasticsearch_seed_hosts }}"
-    install_elasticsearch_initial_master_nodes: "{{ inv_install_elasticsearch_initial_master_nodes }}"
+    install_elasticsearch__major_version: "{{ inv_install_elasticsearch__major_version }}"
+    install_elasticsearch__port: "{{ inv_install_elasticsearch__port }}"
+    install_elasticsearch__cluster_name: "{{ inv_install_elasticsearch__cluster_name }}"
+    install_elasticsearch__elastic_password: "{{ inv_install_elasticsearch__elastic_password }}"
+    install_elasticsearch__heap: "{{ inv_install_elasticsearch__heap }}"
+    install_elasticsearch__data_path: "{{ inv_install_elasticsearch__data_path }}"
+    install_elasticsearch__ssl_path: "{{ inv_install_elasticsearch__ssl_path }}"
+    install_elasticsearch__config_path: "{{ inv_install_elasticsearch__config_path }}"
+    install_elasticsearch__client_auth: "{{ inv_install_elasticsearch__client_auth }}"
+    install_elasticsearch__ssl_authorities: "{{ inv_install_elasticsearch__ssl_authorities }}"
+    install_elasticsearch__ssl: "{{ inv_install_elasticsearch__ssl }}"
+    install_elasticsearch__ssl_key: "{{ inv_install_elasticsearch__ssl_key }}"
+    install_elasticsearch__ssl_crt: "{{ inv_install_elasticsearch__ssl_crt }}"
+    install_elasticsearch__seed_hosts: "{{ inv_install_elasticsearch__seed_hosts }}"
+    install_elasticsearch__initial_master_nodes: "{{ inv_install_elasticsearch__initial_master_nodes }}"
   ansible.builtin.include_role:
     name: "labocbz.install_elasticsearch"
 ```
@@ -265,6 +265,15 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * You can now define your seeds and masters with a var.
 * Edited JVM options for paths
+
+### 2024-02-22: New CICD and fixes
+
+* Added support for Ubuntu 22
+* Added support for Debian 11/22
+* Edited vars for linting (role name and __)
+* Fix idempotency
+* New CI, need work on tag and releases
+* CI use now Sonarqube
 
 ## Authors
 

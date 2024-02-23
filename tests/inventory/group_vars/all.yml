@@ -1,0 +1,34 @@
+---
+inv_prepare_host__system_users:
+  - login: "elasticsearch"
+    group: "elasticsearch"
+
+inv_install_elasticsearch__major_version: "8"
+
+inv_install_elasticsearch__port: 9200
+inv_install_elasticsearch__cluster_name: "my-elasticsearch-cluster.domain.tld"
+inv_install_elasticsearch__data_path: "/var/lib/elasticsearch"
+inv_install_elasticsearch__config_path: "/etc/elasticsearch"
+
+inv_install_elasticsearch__client_auth: true
+inv_install_elasticsearch__ssl_path: "{{ inv_install_elasticsearch__config_path }}/ssl"
+inv_install_elasticsearch__ssl_authorities: "{{ inv_install_elasticsearch__ssl_path }}/my-elasticsearch-cluster.domain.tld/ca-chain.pem.crt"
+
+inv_install_elasticsearch__ssl_key: "{{ inv_install_elasticsearch__ssl_path }}/{{ inv_install_elasticsearch__cluster_name }}/{{ inv_install_elasticsearch__cluster_name }}.pem.key"
+inv_install_elasticsearch__ssl_crt: "{{ inv_install_elasticsearch__ssl_path }}/{{ inv_install_elasticsearch__cluster_name }}/{{ inv_install_elasticsearch__cluster_name }}.pem.crt"
+
+
+inv_install_elasticsearch__elastic_password: "myVeryStringP@ssword"
+inv_install_elasticsearch__ssl: true
+
+inv_install_elasticsearch__heap: "1g"
+
+#inv_install_elasticsearch__seed_hosts:
+#- "molecule-local-instance-1-install-elasticsearch"
+#- "molecule-local-instance-2-install-elasticsearch"
+#- "molecule-local-instance-3-install-elasticsearch"
+
+#inv_install_elasticsearch__initial_master_nodes:
+#- "molecule-local-instance-1-install-elasticsearch"
+#- "molecule-local-instance-2-install-elasticsearch"
+#- "molecule-local-instance-3-install-elasticsearch"

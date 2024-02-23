@@ -1,0 +1,10 @@
+---
+inv_install_elasticsearch__seed_hosts:
+- "molecule-cicd-debian-11-instance-1-install-elasticsearch"
+- "molecule-cicd-debian-11-instance-2-install-elasticsearch"
+- "molecule-cicd-debian-11-instance-3-install-elasticsearch"
+
+inv_install_elasticsearch__initial_master_nodes:
+- "molecule-cicd-debian-11-instance-1-install-elasticsearch"
+- "molecule-cicd-debian-11-instance-2-install-elasticsearch"
+- "molecule-cicd-debian-11-instance-3-install-elasticsearch"
