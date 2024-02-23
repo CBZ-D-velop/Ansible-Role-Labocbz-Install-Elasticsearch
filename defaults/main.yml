@@ -1,28 +1,28 @@
 ---
-install_elasticsearch_major_version: "8"
+install_elasticsearch__major_version: "8"
 
-install_elasticsearch_config_path: "/etc/elasticsearch"
-install_elasticsearch_host: "0.0.0.0"
-install_elasticsearch_port: 9200
-install_elasticsearch_cluster_name: "my.elasticsearch-cluster.tld"
-install_elasticsearch_data_path: "/var/lib/elasticsearch"
-install_elasticsearch_temp_path: "{{ install_elasticsearch_config_path }}/tmp"
+install_elasticsearch__config_path: "/etc/elasticsearch"
+install_elasticsearch__host: "0.0.0.0"
+install_elasticsearch__port: 9200
+install_elasticsearch__cluster_name: "my.elasticsearch-cluster.tld"
+install_elasticsearch__data_path: "/var/lib/elasticsearch"
+install_elasticsearch__temp_path: "{{ install_elasticsearch__config_path }}/tmp"
 
-install_elasticsearch_ssl_path: "{{ install_elasticsearch_config_path }}/ssl"
-install_elasticsearch_client_auth: false
-install_elasticsearch_elastic_password: "myVeryStringP@ssword"
-install_elasticsearch_ssl: true
-install_elasticsearch_ssl_authorities: "/etc/ssl/cacert"
-install_elasticsearch_ssl_key: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.key"
-install_elasticsearch_ssl_crt: "{{ install_elasticsearch_ssl_path }}/{{ install_elasticsearch_cluster_name }}/{{ install_elasticsearch_cluster_name }}.crt"
+install_elasticsearch__ssl_path: "{{ install_elasticsearch__config_path }}/ssl"
+install_elasticsearch__client_auth: false
+install_elasticsearch__elastic_password: "myVeryStringP@ssword"
+install_elasticsearch__ssl: true
+install_elasticsearch__ssl_authorities: "/etc/ssl/cacert"
+install_elasticsearch__ssl_key: "{{ install_elasticsearch__ssl_path }}/{{ install_elasticsearch__cluster_name }}/{{ install_elasticsearch__cluster_name }}.key"
+install_elasticsearch__ssl_crt: "{{ install_elasticsearch__ssl_path }}/{{ install_elasticsearch__cluster_name }}/{{ install_elasticsearch__cluster_name }}.crt"
 
-install_elasticsearch_heap: "4g"
+install_elasticsearch__heap: "4g"
 
-install_elasticsearch_user: "elasticsearch"
-install_elasticsearch_group: "elasticsearch"
+install_elasticsearch__user: "elasticsearch"
+install_elasticsearch__group: "elasticsearch"
 
-install_elasticsearch_seed_hosts:
+install_elasticsearch__seed_hosts:
 - "{{ inventory_hostname }}"
 
-install_elasticsearch_initial_master_nodes:
+install_elasticsearch__initial_master_nodes:
 - "{{ inventory_hostname }}"

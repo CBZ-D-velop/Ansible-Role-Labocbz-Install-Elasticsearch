@@ -20,7 +20,7 @@
 #
 # Use a descriptive name for your cluster:
 #
-cluster.name: {{ install_elasticsearch_cluster_name }}
+cluster.name: {{ install_elasticsearch__cluster_name }}
 #
 # ------------------------------------ Node ------------------------------------
 #
@@ -36,7 +36,7 @@ node.name: {{ ansible_host }}
 #
 # Path to directory where to store the data (separate multiple locations by comma):
 #
-path.data: {{ install_elasticsearch_data_path }}
+path.data: {{ install_elasticsearch__data_path }}
 #
 # Path to log files:
 #
@@ -59,12 +59,12 @@ path.logs: /var/log/elasticsearch
 # By default Elasticsearch is only accessible on localhost. Set a different
 # address here to expose this node on the network:
 #
-network.host: {{ install_elasticsearch_host }}
+network.host: {{ install_elasticsearch__host }}
 #
 # By default Elasticsearch listens for HTTP traffic on the first free port it
 # finds starting at 9200. Set a specific HTTP port here:
 #
-http.port: {{ install_elasticsearch_port }}
+http.port: {{ install_elasticsearch__port }}
 #
 # For more information, consult the network module documentation.
 #
@@ -75,7 +75,7 @@ http.port: {{ install_elasticsearch_port }}
 #
 #discovery.seed_hosts: ["host1", "host2"]
 discovery.seed_hosts:
-{% for host in install_elasticsearch_seed_hosts %}
+{% for host in install_elasticsearch__seed_hosts %}
   - "{{ host }}:9300"
 {% endfor %}
 #
@@ -83,7 +83,7 @@ discovery.seed_hosts:
 #
 #cluster.initial_master_nodes: ["node-1", "node-2"]
 cluster.initial_master_nodes:
-{% for host in install_elasticsearch_initial_master_nodes %}
+{% for host in install_elasticsearch__initial_master_nodes %}
   - {{ host }}
 {% endfor %}
 #
@@ -110,24 +110,24 @@ cluster.initial_master_nodes:
 
 # Enable security features
 
-{% if install_elasticsearch_ssl | default(false) %}
+{% if install_elasticsearch__ssl | default(false) %}
 xpack.security.enabled: true
 xpack.security.enrollment.enabled: true
 
 # Enable encryption and mutual authentication between cluster nodes
 xpack.security.transport.ssl.enabled: true
 xpack.security.transport.ssl.verification_mode: certificate
-xpack.security.transport.ssl.key: "{{ install_elasticsearch_ssl_key }}"
-xpack.security.transport.ssl.certificate: "{{ install_elasticsearch_ssl_crt }}"
-{% if install_elasticsearch_client_auth | default(false) %}
+xpack.security.transport.ssl.key: "{{ install_elasticsearch__ssl_key }}"
+xpack.security.transport.ssl.certificate: "{{ install_elasticsearch__ssl_crt }}"
+{% if install_elasticsearch__client_auth | default(false) %}
 xpack.security.transport.ssl.client_authentication: required
 {% endif %}
 # Enable encryption for HTTP API client connections, such as Kibana, Logstash, and Agents
 xpack.security.http.ssl.enabled: true
 xpack.security.http.ssl.verification_mode: certificate
-xpack.security.http.ssl.key: "{{ install_elasticsearch_ssl_key }}"
-xpack.security.http.ssl.certificate: "{{ install_elasticsearch_ssl_crt }}"
-xpack.security.transport.ssl.certificate_authorities: [ "{{ install_elasticsearch_ssl_authorities }}" ]
+xpack.security.http.ssl.key: "{{ install_elasticsearch__ssl_key }}"
+xpack.security.http.ssl.certificate: "{{ install_elasticsearch__ssl_crt }}"
+xpack.security.transport.ssl.certificate_authorities: [ "{{ install_elasticsearch__ssl_authorities }}" ]
 
 {% else %}
 

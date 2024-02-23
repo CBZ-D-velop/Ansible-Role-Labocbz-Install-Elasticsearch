@@ -3,7 +3,7 @@
   ansible.builtin.package:
     update_cache: true
     name:
-      - apt-transport-https
+      - "apt-transport-https"
 
 - name: "Install Elasticsearch"
   notify:
@@ -16,7 +16,7 @@
 
     - name: "Add Elasticsearch Repository"
       ansible.builtin.apt_repository:
-        repo: "deb [arch=amd64] https://artifacts.elastic.co/packages/{{ install_elasticsearch_major_version }}.x/apt stable main"
+        repo: "deb [arch=amd64] https://artifacts.elastic.co/packages/{{ install_elasticsearch__major_version }}.x/apt stable main"
 
     - name: "Update apt and install Elasticsearch"
       ansible.builtin.apt:
@@ -27,41 +27,41 @@
     - name: "Fix JVM options for Elasticsearch"
       ansible.builtin.template:
         src: "templates/jvm.options.j2"
-        dest: "{{ install_elasticsearch_config_path }}/jvm.options"
-        owner: "{{ install_elasticsearch_user }}"
-        group: "{{ install_elasticsearch_group }}"
+        dest: "{{ install_elasticsearch__config_path }}/jvm.options"
+        owner: "{{ install_elasticsearch__user }}"
+        group: "{{ install_elasticsearch__group }}"
         mode: "0700"
         lstrip_blocks: yes
 
     - name: "Check if Elasticsearch temps dir exist"
       register: file_check
       ansible.builtin.stat:
-        path: "{{ install_elasticsearch_temp_path }}"
+        path: "{{ install_elasticsearch__temp_path }}"
 
     - name: "Create Elasticsearch temps dir"
       when: not file_check.stat.exists
       ansible.builtin.file:
-        path: "{{ install_elasticsearch_temp_path }}"
+        path: "{{ install_elasticsearch__temp_path }}"
         state: directory
         recurse: yes
-        owner: "{{ install_elasticsearch_user }}"
-        group: "{{ install_elasticsearch_group }}"
+        owner: "{{ install_elasticsearch__user }}"
+        group: "{{ install_elasticsearch__group }}"
         mode: "0700"
 
     - name: "Import Elasticsearch configuration file"
       ansible.builtin.template:
         src: "templates/elasticsearch.yml.j2"
-        dest: "{{ install_elasticsearch_config_path }}/elasticsearch.yml"
-        owner: "{{ install_elasticsearch_user }}"
-        group: "{{ install_elasticsearch_group }}"
+        dest: "{{ install_elasticsearch__config_path }}/elasticsearch.yml"
+        owner: "{{ install_elasticsearch__user }}"
+        group: "{{ install_elasticsearch__group }}"
         mode: "0700"
         lstrip_blocks: yes
 
     - name: "Apply permissions on Elasticsearch dirs"
       loop:
-        - "{{ install_elasticsearch_temp_path }}"
-        - "{{ install_elasticsearch_config_path }}"
-        - "{{ install_elasticsearch_data_path }}"
+        - "{{ install_elasticsearch__temp_path }}"
+        - "{{ install_elasticsearch__config_path }}"
+        - "{{ install_elasticsearch__data_path }}"
       loop_control:
         loop_var: path
       register: output
@@ -70,8 +70,8 @@
         path: "{{ path }}"
         state: directory
         recurse: yes
-        owner: "{{ install_elasticsearch_user }}"
-        group: "{{ install_elasticsearch_group }}"
+        owner: "{{ install_elasticsearch__user }}"
+        group: "{{ install_elasticsearch__group }}"
         mode: "0700"
 
 - name: "Flush handlers"
@@ -79,7 +79,7 @@
 
 - name: "Change the Elastic user password"
   run_once: true
-  when: install_elasticsearch_elastic_password | default(false)
+  when: install_elasticsearch__elastic_password | default(false)
   block:
     - name: "Reset the password"
       register: elastic_password
@@ -88,41 +88,41 @@
       ansible.builtin.command: "/usr/share/elasticsearch/bin/elasticsearch-reset-password -b -u elastic --force"
 
     - name: "Set the new password (with HTTPS, no client auth)"
-      when: not install_elasticsearch_client_auth
+      when: not install_elasticsearch__client_auth
       vars:
         elastic_new_password: "{{ elastic_password.stdout_lines[-1] | regex_replace('^New value: (.*)$', '\\1') }}"
       register: output
       failed_when: output.json != {}
       changed_when: output.json != {}
       ansible.builtin.uri:
-        url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
+        url: "https://{{ inventory_hostname }}:{{ install_elasticsearch__port }}/_security/user/elastic/_password?pretty"
         method: POST
         user: "elastic"
         password: "{{ elastic_new_password }}"
         body_format: json
         body:
-          password: "{{ install_elasticsearch_elastic_password }}"
+          password: "{{ install_elasticsearch__elastic_password }}"
         headers:
           Content-Type: "application/json"
         force_basic_auth: yes
 
     - name: "Set the new password (with HTTPS, with client auth)"
-      when: install_elasticsearch_client_auth
+      when: install_elasticsearch__client_auth
       vars:
         elastic_new_password: "{{ elastic_password.stdout_lines[-1] | regex_replace('^New value: (.*)$', '\\1') }}"
       register: output
       failed_when: output.json != {}
       changed_when: output.json != {}
       ansible.builtin.uri:
-        url: "https://{{ inventory_hostname }}:{{ install_elasticsearch_port }}/_security/user/elastic/_password?pretty"
+        url: "https://{{ inventory_hostname }}:{{ install_elasticsearch__port }}/_security/user/elastic/_password?pretty"
         method: POST
         user: "elastic"
         password: "{{ elastic_new_password }}"
         body_format: json
         body:
-          password: "{{ install_elasticsearch_elastic_password }}"
+          password: "{{ install_elasticsearch__elastic_password }}"
         headers:
           Content-Type: "application/json"
-        client_cert: "{{ install_elasticsearch_ssl_crt }}"
-        client_key: "{{ install_elasticsearch_ssl_key }}"
+        client_cert: "{{ install_elasticsearch__ssl_crt }}"
+        client_key: "{{ install_elasticsearch__ssl_key }}"
         force_basic_auth: yes

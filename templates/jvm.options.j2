@@ -35,8 +35,8 @@
 ## heap to 4 GB, create a new file in the jvm.options.d
 ## directory containing these lines:
 ##
--Xms{{ install_elasticsearch_heap }}
--Xmx{{ install_elasticsearch_heap }}
+-Xms{{ install_elasticsearch__heap }}
+-Xmx{{ install_elasticsearch__heap }}
 ##
 ## See https://www.elastic.co/guide/en/elasticsearch/reference/8.7/heap-size.html
 ## for more information
@@ -59,7 +59,7 @@
 
 ## JVM temporary directory
 #-Djava.io.tmpdir=${ES_TMPDIR}
--Djava.io.tmpdir={{ install_elasticsearch_temp_path }}
+-Djava.io.tmpdir={{ install_elasticsearch__temp_path }}
 
 ## heap dumpsl
 
@@ -73,7 +73,7 @@
 
 # specify an alternative path for heap dumps; ensure the directory exists and
 # has sufficient space
--XX:HeapDumpPath={{ install_elasticsearch_data_path }}
+-XX:HeapDumpPath={{ install_elasticsearch__data_path }}
 
 # specify an alternative path for JVM fatal error logs
 -XX:ErrorFile=/var/log/elasticsearch/hs_err_pid%p.log

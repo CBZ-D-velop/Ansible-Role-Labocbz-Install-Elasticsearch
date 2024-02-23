@@ -1,32 +1,26 @@
 ---
 - name: "Converge"
-  hosts: "all"
+  hosts: "local"
   tasks:
-    # replace these tasks with whatever you find suitable to test
-    - name: "Copy something to test use of synchronize module"
-      ansible.builtin.copy:
-        src: "/etc/hosts"
-        dest: "/tmp/hosts-from-controller"
-        mode: 0700
 
     - name: "Include labocbz.install_elasticsearch"
       tags:
         - "labocbz.install_elasticsearch"
       vars:
-        install_elasticsearch_major_version: "{{ inv_install_elasticsearch_major_version }}"
-        install_elasticsearch_port: "{{ inv_install_elasticsearch_port }}"
-        install_elasticsearch_cluster_name: "{{ inv_install_elasticsearch_cluster_name }}"
-        install_elasticsearch_elastic_password: "{{ inv_install_elasticsearch_elastic_password }}"
-        install_elasticsearch_heap: "{{ inv_install_elasticsearch_heap }}"
-        install_elasticsearch_data_path: "{{ inv_install_elasticsearch_data_path }}"
-        install_elasticsearch_ssl_path: "{{ inv_install_elasticsearch_ssl_path }}"
-        install_elasticsearch_config_path: "{{ inv_install_elasticsearch_config_path }}"
-        install_elasticsearch_client_auth: "{{ inv_install_elasticsearch_client_auth }}"
-        install_elasticsearch_ssl_authorities: "{{ inv_install_elasticsearch_ssl_authorities }}"
-        install_elasticsearch_ssl: "{{ inv_install_elasticsearch_ssl }}"
-        install_elasticsearch_ssl_key: "{{ inv_install_elasticsearch_ssl_key }}"
-        install_elasticsearch_ssl_crt: "{{ inv_install_elasticsearch_ssl_crt }}"
-        install_elasticsearch_seed_hosts: "{{ inv_install_elasticsearch_seed_hosts }}"
-        install_elasticsearch_initial_master_nodes: "{{ inv_install_elasticsearch_initial_master_nodes }}"
+        install_elasticsearch__major_version: "{{ inv_install_elasticsearch__major_version }}"
+        install_elasticsearch__port: "{{ inv_install_elasticsearch__port }}"
+        install_elasticsearch__cluster_name: "{{ inv_install_elasticsearch__cluster_name }}"
+        install_elasticsearch__elastic_password: "{{ inv_install_elasticsearch__elastic_password }}"
+        install_elasticsearch__heap: "{{ inv_install_elasticsearch__heap }}"
+        install_elasticsearch__data_path: "{{ inv_install_elasticsearch__data_path }}"
+        install_elasticsearch__ssl_path: "{{ inv_install_elasticsearch__ssl_path }}"
+        install_elasticsearch__config_path: "{{ inv_install_elasticsearch__config_path }}"
+        install_elasticsearch__client_auth: "{{ inv_install_elasticsearch__client_auth }}"
+        install_elasticsearch__ssl_authorities: "{{ inv_install_elasticsearch__ssl_authorities }}"
+        install_elasticsearch__ssl: "{{ inv_install_elasticsearch__ssl }}"
+        install_elasticsearch__ssl_key: "{{ inv_install_elasticsearch__ssl_key }}"
+        install_elasticsearch__ssl_crt: "{{ inv_install_elasticsearch__ssl_crt }}"
+        install_elasticsearch__seed_hosts: "{{ inv_install_elasticsearch__seed_hosts }}"
+        install_elasticsearch__initial_master_nodes: "{{ inv_install_elasticsearch__initial_master_nodes }}"
       ansible.builtin.include_role:
         name: "labocbz.install_elasticsearch"
