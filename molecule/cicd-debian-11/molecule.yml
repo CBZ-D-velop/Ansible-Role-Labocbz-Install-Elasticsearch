@@ -25,6 +25,40 @@ platforms:
     networks:
       - name: "molecule-cicd-debian-11-install-elasticsearch"
 
+  - name: "molecule-cicd-debian-11-instance-2-install-elasticsearch"
+    image: "${NEXUS_REPOS_DOCKER_REGISTRY}/${DOCKER_IMAGE_DEBIAN_11_ANSIBLE}"
+    hostname: "molecule-cicd-debian-11-instance-2-install-elasticsearch"
+    privileged: true
+    pre_build_image: true
+    command: "/sbin/init"
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    tmpfs:
+      - "/run"
+      - "/tmp"
+    cgroupns_mode: "host"
+    cgroup_manager: "cgroupfs"
+    storage_driver: "overlay2"
+    networks:
+      - name: "molecule-cicd-debian-11-install-elasticsearch"
+
+  - name: "molecule-cicd-debian-11-instance-3-install-elasticsearch"
+    image: "${NEXUS_REPOS_DOCKER_REGISTRY}/${DOCKER_IMAGE_DEBIAN_11_ANSIBLE}"
+    hostname: "molecule-cicd-debian-11-instance-3-install-elasticsearch"
+    privileged: true
+    pre_build_image: true
+    command: "/sbin/init"
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    tmpfs:
+      - "/run"
+      - "/tmp"
+    cgroupns_mode: "host"
+    cgroup_manager: "cgroupfs"
+    storage_driver: "overlay2"
+    networks:
+      - name: "molecule-cicd-debian-11-install-elasticsearch"
+
 provisioner:
   name: "ansible"
   inventory:
