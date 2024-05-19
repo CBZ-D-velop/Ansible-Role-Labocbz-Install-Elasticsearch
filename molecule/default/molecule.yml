@@ -9,7 +9,7 @@ driver:
 
 platforms:
   - name: "molecule-local-instance-1-install-elasticsearch"
-    image: "robincbz/debian-12-ansible:latest"
+    image: "labocbz/ansibletest-debian-12:latest"
     hostname: "molecule-local-instance-1-install-elasticsearch"
     #published_ports:
     #  - "0.0.0.0:8080:8080/tcp"
@@ -28,7 +28,7 @@ platforms:
       - name: "molecule-default-install-elasticsearch"
 
   - name: "molecule-local-instance-2-install-elasticsearch"
-    image: "robincbz/debian-12-ansible:latest"
+    image: "labocbz/ansibletest-debian-12:latest"
     hostname: "molecule-local-instance-2-install-elasticsearch"
     #published_ports:
     #  - "0.0.0.0:8080:8080/tcp"
@@ -47,7 +47,7 @@ platforms:
       - name: "molecule-default-install-elasticsearch"
 
   - name: "molecule-local-instance-3-install-elasticsearch"
-    image: "robincbz/debian-12-ansible:latest"
+    image: "labocbz/ansibletest-debian-12:latest"
     hostname: "molecule-local-instance-3-install-elasticsearch"
     #published_ports:
     #  - "0.0.0.0:8080:8080/tcp"
@@ -74,7 +74,7 @@ provisioner:
       host_vars: "../../tests/inventory/host_vars/"
   options:
     extra-vars: "@./tests/tower/tower.yml"
-  log: ${MOLECULE_ANSIBLE_LOG:-true}
+  log: true
   env:
     ANSIBLE_CONFIG: "../../.ansible.cfg"
     ANSIBLE_FORCE_COLOR: "True"
